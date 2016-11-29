@@ -28,7 +28,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ToggleButton Content="{Binding}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding X}"></Label>
+                        <Label Content="{Binding Y}"></Label>
+                    </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

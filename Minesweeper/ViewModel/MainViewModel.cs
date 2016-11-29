@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight;
+using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
 
     public class MainViewModel : ViewModelBase {
-        private int[] _fields;
+        private Field[] _fields;
         private int _height;
         private int _width;
         private int _mines;
@@ -41,12 +42,13 @@ namespace Minesweeper.ViewModel {
             _height = 8;
             _width = 8;
             _mines = 8;
-            _fields = new int[_height * _width];
+            _fields = new Field[_height * _width];
+            InitalizeFields();
             PlaceBombs();
             PlaceCues();
         }
 
-        public int[] Fields {
+        public Field[] Fields {
             get { return _fields; }
 
             set {
@@ -56,7 +58,9 @@ namespace Minesweeper.ViewModel {
         }
 
         private void InitalizeFields() {
-
+            for (int i = 0; i < _fields.Length; i++) {
+                _fields[i] = new Field(i % _width, i / _height);
+            }
         }
 
         private void PlaceCues() {
@@ -64,7 +68,7 @@ namespace Minesweeper.ViewModel {
                 for (int j = 0; j < _height; j++) {
 
                     // If mine, update adjacent fields with cues
-                    if (_fields[i + j*_height] == -1) {
+                    if (_fields[i + j*_height].IsMine) {
                         for (int k = -1; k < 2; k++) {
                             for (int l = -1; l < 2; l++) {
                                 if (k == 0 && l == 0) {
@@ -79,11 +83,11 @@ namespace Minesweeper.ViewModel {
                                     continue;
                                 }
 
-                                if (_fields[i + k + (j + l)*_height] == -1) {
+                                if (_fields[i + k + (j + l)*_height].IsMine) {
                                     continue;
                                 }
 
-                                _fields[i + k + (j + l) * _height]++;
+                                _fields[i + k + (j + l) * _height].Cues++;
                             }
                         }
                     }
@@ -104,7 +108,7 @@ namespace Minesweeper.ViewModel {
             while (bombsPlaced < _mines) {
                 var bombField = fields[rnd.Next(fields.Count)];
                 fields.Remove(bombField);
-                _fields[bombField] = -1;
+                _fields[bombField].IsMine = true;
 
                 bombsPlaced++;
             }

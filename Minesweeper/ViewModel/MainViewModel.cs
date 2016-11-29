@@ -22,14 +22,15 @@ namespace Minesweeper.ViewModel {
         private int _height;
         private bool _isMineHit;
         private int _width;
+        private int _flagsRemaining;
 
         public MainViewModel() {
-            _height = 8;
-            _width = 8;
-            _mineCount = 8;
             _fields = new ObservableCollection<Field>();
             _mines = new List<Field>();
 
+            _width = 8;
+            _height = 8;
+            _mineCount = 10;
             Restart();
         }
 
@@ -62,6 +63,18 @@ namespace Minesweeper.ViewModel {
             }
         }
 
+        public int FlagsRemaining {
+            get { return _flagsRemaining; }
+            set {
+                if (_flagsRemaining == value) {
+                    return;
+                }
+
+                _flagsRemaining = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public ObservableCollection<Field> Fields {
             get { return _fields; }
             set {
@@ -88,7 +101,6 @@ namespace Minesweeper.ViewModel {
                     _mineCount = 99;
                     break;
             }
-
             Restart();
         }
 
@@ -97,13 +109,24 @@ namespace Minesweeper.ViewModel {
             _firstReveal = false;
             _isMineHit = false;
             _fieldsRevealed = 0;
+            _flagsRemaining = _mineCount;
         }
 
         private void InitalizeFields() {
-            _fields.Clear();
+            if (_fields.Count < _width*_height) {
+                for (var i = _fields.Count; i < _width*_height; i++) {
+                    _fields.Add(new Field());
+                }
+            }
 
-            for (var i = 0; i < _width*_height; i++) {
-                _fields.Add(new Field(i%_width, i/_width));
+            if (_fields.Count > _width * _height) {
+                for (var i = _fields.Count - 1; i >= _width * _height; i--) {
+                    _fields.RemoveAt(i);
+                }
+            }
+
+            for (var i = 0; i < _width * _height; i++) {
+                _fields[i].Set(i % _width, i / _width);
             }
         }
 
@@ -125,6 +148,12 @@ namespace Minesweeper.ViewModel {
             }
 
             field.IsFlagPlaced = !field.IsFlagPlaced;
+
+            if (field.IsFlagPlaced) {
+                FlagsRemaining--;
+            } else {
+                FlagsRemaining++;
+            }
         }
 
         private void Reveal(Field field) {

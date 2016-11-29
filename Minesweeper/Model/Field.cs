@@ -24,8 +24,7 @@ namespace Minesweeper.Model {
             }
         }
 
-        public bool IsFlagMissPlaced
-        {
+        public bool IsFlagMissPlaced {
             get { return _isFlagMissPlaced; }
             set {
                 if (_isFlagMissPlaced == value) {
@@ -73,14 +72,14 @@ namespace Minesweeper.Model {
             }
         }
 
-
-
-        public Field(int x, int y) {
+        public void Set(int x, int y) {
             X = x;
             Y = y;
-            _isMine = false;
-            _cues = 0;
-            _isRevealed = false;
+            IsMine = false;
+            Cues = 0;
+            IsRevealed = false;
+            IsFlagMissPlaced = false;
+            IsFlagPlaced = false;
         }
     }
 }

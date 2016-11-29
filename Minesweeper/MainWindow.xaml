@@ -28,32 +28,39 @@
             <Label Content=""></Label>
             <Button Content="Restart" Command="{Binding RestartCommand }"/>
         </StackPanel>
-        
-        <ListBox Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedIndex="{Binding SelectedField}">
-            <ListBox.ItemsPanel>
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}">
+            <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}"/>
+                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}">
+                    </UniformGrid>
                 </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Padding" Value="0"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
-
-            <ListBox.ItemTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ToggleButton IsChecked="{Binding IsRevealed}" IsHitTestVisible="False">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
+                    <Button Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}">
+                        <Button.InputBindings>
+                            <MouseBinding Gesture="RightClick" Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+                        </Button.InputBindings>
+                        
+                        <Button.Style>
+                            <Style TargetType="Button">
                                 <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsRevealed}" Value="False"/>
+                                            <Condition Binding="{Binding FlagPlaced}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Content" Value="F"/>
+                                    </MultiDataTrigger>
+
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding IsRevealed}" Value="True"/>
                                             <Condition Binding="{Binding IsMine}" Value="False"/>
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Content" Value="{Binding Cues}"/>
+                                        <Setter Property="IsEnabled" Value="False"/>
                                     </MultiDataTrigger>
 
                                     <MultiDataTrigger>
@@ -62,14 +69,21 @@
                                             <Condition Binding="{Binding IsMine}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Content" Value="Mine"/>
+                                        <Setter Property="IsEnabled" Value="False"/>
                                     </MultiDataTrigger>
 
-                                    <!--<DataTrigger Binding="{Binding IsMine}" Value="True">
-                                        <Setter Property="Content" Value="Mine"/>
-                                    </DataTrigger>-->
-                                    <DataTrigger Binding="{Binding Cues}" Value="0">
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding FlagPlaced}" Value="False"/>
+                                            <Condition Binding="{Binding Cues}" Value="0"/>
+                                        </MultiDataTrigger.Conditions>
                                         <Setter Property="Content" Value=""/>
-                                    </DataTrigger>
+                                    </MultiDataTrigger>
+
+                                    <!--<DataTrigger Binding="{Binding Cues}" Value="0">
+                                        <Setter Property="Content" Value=""/>
+                                    </DataTrigger>-->
+
                                     <DataTrigger Binding="{Binding Cues}" Value="1">
                                         <Setter Property="Foreground" Value="Green"/>
                                     </DataTrigger>
@@ -81,26 +95,10 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        
-        <!--<ItemsControl ItemsSource="{Binding Fields}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="{Binding X}"></Label>
-                        <Label Content="{Binding Y}"></Label>
-                    </StackPanel>
+                        </Button.Style>
+                    </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>-->
+        </ItemsControl>
     </Grid>
 </Window>

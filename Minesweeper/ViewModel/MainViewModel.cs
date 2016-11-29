@@ -12,7 +12,7 @@ namespace Minesweeper.ViewModel {
         private ObservableCollection<Field> _fields;
         private int _height;
         private readonly List<Field> _mines;
-        private int _selectedField;
+        //private int _selectedField;
         private int _width;
         private int _fieldsRevealed;
         private bool _firstReveal;
@@ -47,29 +47,29 @@ namespace Minesweeper.ViewModel {
             }
         }
 
-        public int SelectedField {
-            get { return _selectedField; }
-            set {
-                if (_selectedField == value) {
-                    return;
-                }
+        //public int SelectedField {
+        //    get { return _selectedField; }
+        //    set {
+        //        if (_selectedField == value) {
+        //            return;
+        //        }
 
-                _selectedField = value;
+        //        _selectedField = value;
 
-                if (Fields.Count == 0 || Fields[_selectedField].IsRevealed) {
-                    return;
-                }
+        //        if (Fields.Count == 0 || Fields[_selectedField].IsRevealed) {
+        //            return;
+        //        }
 
-                if (!_firstReveal) {
-                    _firstReveal = true;
-                    PlaceBombs();
-                    PlaceCues();
-                }
+        //        if (!_firstReveal) {
+        //            _firstReveal = true;
+        //            PlaceBombs();
+        //            PlaceCues();
+        //        }
                 
-                RevealFields(Fields[_selectedField]);
-                RaisePropertyChanged();
-            }
-        }
+        //        RevealFields(Fields[_selectedField]);
+        //        RaisePropertyChanged();
+        //    }
+        //}
 
         public int Width {
             get { return _width; }
@@ -111,6 +111,26 @@ namespace Minesweeper.ViewModel {
             }
         }
 
+        public ICommand RevealCommand => new RelayCommand<Field>(Reveal);
+        public ICommand PlaceFlagCommand => new RelayCommand<Field>(PlaceFlag);
+
+        private void PlaceFlag(Field field) {
+            field.FlagPlaced = !field.FlagPlaced;
+        }
+
+        private void Reveal(Field field) {
+            if (Fields.Count == 0 || field.IsRevealed || field.FlagPlaced) {
+                return;
+            }
+
+            if (!_firstReveal) {
+                _firstReveal = true;
+                PlaceBombs(field);
+                PlaceCues();
+            }
+            RevealFields(field);
+        }
+
         private void RevealFields(Field field) {
             if (field.Cues > 0) {
                 field.IsRevealed = true;
@@ -132,8 +152,11 @@ namespace Minesweeper.ViewModel {
 
                 while (queue.Count > 0) {
                     var current = queue.Dequeue();
-                    current.IsRevealed = true;
-                    _fieldsRevealed++;
+
+                    if (!current.FlagPlaced) {
+                        current.IsRevealed = true;
+                        _fieldsRevealed++;
+                    }
 
                     if (current.Cues != 0) {
                         continue;
@@ -181,7 +204,7 @@ namespace Minesweeper.ViewModel {
             return neightoubrs;
         }
 
-        private void PlaceBombs() {
+        private void PlaceBombs(Field field) {
             _mines.Clear();
 
             var rnd = new Random();
@@ -191,7 +214,7 @@ namespace Minesweeper.ViewModel {
                 fields.Add(i);
             }
 
-            fields.Remove(fields[SelectedField]);
+            fields.Remove(_fields.IndexOf(field));
 
             var bombsPlaced = 0;
 

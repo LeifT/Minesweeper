@@ -89,6 +89,10 @@ namespace Minesweeper.ViewModel {
         }
 
         private void PlaceFlag(Field field) {
+            if (field.IsRevealed) {
+                return;
+            }
+
             field.IsFlagPlaced = !field.IsFlagPlaced;
         }
 

@@ -12,6 +12,7 @@ namespace Minesweeper.ViewModel {
         private readonly List<Field> _mines;
         private int _selectedField;
         private int _width;
+        private int _fieldsRevealed;
 
         public MainViewModel() {
             _height = 8;
@@ -88,40 +89,42 @@ namespace Minesweeper.ViewModel {
         }
 
         private void RevealFields(Field field) {
-            field.IsRevealed = true;
-
             if (field.Cues > 0) {
-                return;
-            }
-
-            if (field.IsMine) {
+                field.IsRevealed = true;
+                _fieldsRevealed++;
+               
+            } else if (field.IsMine) {
                 // Game over
                 foreach (var mine in _mines) {
                     mine.IsRevealed = true;
                 }
-
                 return;
-            }
+            } else {
+                var visited = new HashSet<Field>();
+                var queue = new Queue<Field>();
 
-            var visited = new HashSet<Field>();
-            var queue = new Queue<Field>();
+                visited.Add(field);
+                queue.Enqueue(field);
 
-            visited.Add(field);
-            queue.Enqueue(field);
+                while (queue.Count > 0) {
+                    var current = queue.Dequeue();
+                    current.IsRevealed = true;
+                    _fieldsRevealed++;
 
-            while (queue.Count > 0) {
-                var current = queue.Dequeue();
-                current.IsRevealed = true;
+                    if (current.Cues != 0) {
+                        continue;
+                    }
 
-                if (current.Cues != 0) {
-                    continue;
-                }
-
-                foreach (var neightbour in GetNeightbours(current)) {
-                    if (visited.Add(neightbour)) {
-                        queue.Enqueue(neightbour);
+                    foreach (var neightbour in GetNeightbours(current)) {
+                        if (visited.Add(neightbour)) {
+                            queue.Enqueue(neightbour);
+                        }
                     }
                 }
+            }
+
+            if (_fieldsRevealed == _width * _height - _mineCount) {
+                // Victory
             }
         }
 

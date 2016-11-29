@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         mc:Ignorable="d ignore"
-        Height="320"
+        Height="360"
         Width="300"
         Title="Minesweeper"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
@@ -19,7 +19,16 @@
     </Window.Resources>
 
     <Grid>
-        <ListBox HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedIndex="{Binding SelectedField}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Orientation="Horizontal">
+            <Label Content=""></Label>
+        </StackPanel>
+        
+        <ListBox Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedIndex="{Binding SelectedField}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}"/>

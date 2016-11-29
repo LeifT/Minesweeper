@@ -6,10 +6,10 @@ using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
-        private ObservableCollection<Field> _fields;
-        private List<Field> _mines;
-        private int _height;
         private readonly int _mineCount;
+        private ObservableCollection<Field> _fields;
+        private int _height;
+        private readonly List<Field> _mines;
         private int _selectedField;
         private int _width;
 
@@ -19,6 +19,7 @@ namespace Minesweeper.ViewModel {
             _mineCount = 8;
             _fields = new ObservableCollection<Field>();
             _mines = new List<Field>();
+
             InitalizeFields();
             PlaceBombs();
             PlaceCues();
@@ -78,10 +79,8 @@ namespace Minesweeper.ViewModel {
             foreach (var mineField in _mines) {
                 var mineNeigbours = GetNeightbours(mineField);
 
-                foreach (var mineNeigbour in mineNeigbours)
-                {
-                    if (!mineNeigbour.IsMine)
-                    {
+                foreach (var mineNeigbour in mineNeigbours) {
+                    if (!mineNeigbour.IsMine) {
                         mineNeigbour.Cues++;
                     }
                 }
@@ -100,12 +99,12 @@ namespace Minesweeper.ViewModel {
                 foreach (var mine in _mines) {
                     mine.IsRevealed = true;
                 }
-                
+
                 return;
             }
 
-            HashSet<Field> visited = new HashSet<Field>();
-            Queue<Field> queue = new Queue<Field>();
+            var visited = new HashSet<Field>();
+            var queue = new Queue<Field>();
 
             visited.Add(field);
             queue.Enqueue(field);
@@ -127,7 +126,7 @@ namespace Minesweeper.ViewModel {
         }
 
         private List<Field> GetNeightbours(Field field) {
-            List<Field> neightoubrs = new List<Field>();
+            var neightoubrs = new List<Field>();
 
             for (var i = -1; i < 2; i++) {
                 for (var j = -1; j < 2; j++) {
@@ -143,7 +142,7 @@ namespace Minesweeper.ViewModel {
                         continue;
                     }
 
-                    neightoubrs.Add(_fields[field.X + i + (field.Y + j) * _height]);
+                    neightoubrs.Add(_fields[field.X + i + (field.Y + j)*_height]);
                 }
             }
 

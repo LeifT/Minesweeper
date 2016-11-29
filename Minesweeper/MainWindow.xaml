@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         mc:Ignorable="d ignore"
-        Height="300"
+        Height="320"
         Width="300"
-        Title="MVVM Light Application"
+        Title="Minesweeper"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
     
     <Window.Resources>
@@ -34,19 +34,29 @@
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <ToggleButton IsChecked="{Binding IsRevealed}" Content="{Binding Cues}" IsHitTestVisible="False">
-                        <!--<ToggleButton.Style>
+                    <ToggleButton IsChecked="{Binding IsRevealed}" IsHitTestVisible="False">
+                        <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
+                                <Setter Property="Content" Value="{Binding Cues}"/>
                                 <Style.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter Property="Content" Value="{Binding Cues}" />
-                                    </Trigger>
-                                    <Trigger Property="IsChecked" Value="False">
-                                        <Setter Property="Content" Value="" />
-                                    </Trigger>
+                                    <DataTrigger Binding="{Binding IsMine}" Value="True">
+                                        <Setter Property="Content" Value="Mine"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Cues}" Value="0">
+                                        <Setter Property="Content" Value=""/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Cues}" Value="1">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Cues}" Value="2">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Cues}" Value="3">
+                                        <Setter Property="Foreground" Value="Yellow"/>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ToggleButton.Style>-->
+                        </ToggleButton.Style>
                     </ToggleButton>
                 </DataTemplate>
             </ListBox.ItemTemplate>

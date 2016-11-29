@@ -18,7 +18,7 @@ namespace Minesweeper.ViewModel {
         private readonly List<Field> _mines;
         private ObservableCollection<Field> _fields;
         private int _fieldsRevealed;
-        private bool _firstReveal;
+        private bool _isFirstFieldRevealed;
         private int _height;
         private bool _isMineHit;
         private int _width;
@@ -33,7 +33,7 @@ namespace Minesweeper.ViewModel {
             _mineCount = 10;
 
             InitalizeFields();
-            _firstReveal = false;
+            _isFirstFieldRevealed = false;
             _isMineHit = false;
             _fieldsRevealed = 0;
             _flagsRemaining = _mineCount;
@@ -42,7 +42,33 @@ namespace Minesweeper.ViewModel {
         public ICommand RestartCommand => new RelayCommand(Restart);
         public ICommand RevealCommand => new RelayCommand<Field>(Reveal);
         public ICommand PlaceFlagCommand => new RelayCommand<Field>(PlaceFlag);
+        public ICommand MultiRevealCommand => new RelayCommand<Field>(MultiReveal);
         public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficulty);
+
+        private void MultiReveal(Field field) {
+            if (field.Cues == 0 || !field.IsRevealed) {
+                return;
+            }
+
+            int neigthbouringFlags = 0;
+
+            foreach (var neightbour in GetNeightbours(field)) {
+                if (neightbour.IsFlagPlaced) {
+                    neigthbouringFlags++;
+                }
+            }
+
+            if (neigthbouringFlags >= field.Cues) {
+                foreach (var neightbour in GetNeightbours(field)) {
+                    if (neightbour.IsRevealed || neightbour.IsFlagPlaced) {
+                        continue;
+                    }
+                    RevealFields(neightbour);
+                }
+            }
+        }
+
+        
 
         public int Height {
             get { return _height; }
@@ -111,7 +137,7 @@ namespace Minesweeper.ViewModel {
 
         private void Restart() {
             InitalizeFields();
-            _firstReveal = false;
+            _isFirstFieldRevealed = false;
             _isMineHit = false;
             _fieldsRevealed = 0;
             FlagsRemaining = _mineCount;
@@ -166,13 +192,15 @@ namespace Minesweeper.ViewModel {
                 return;
             }
 
-            if (!_firstReveal) {
-                _firstReveal = true;
+            if (!_isFirstFieldRevealed) {
+                _isFirstFieldRevealed = true;
                 PlaceBombs(field);
                 PlaceCues();
             }
             RevealFields(field);
         }
+
+        
 
         private void RevealFields(Field field) {
             if (field.IsMine) {

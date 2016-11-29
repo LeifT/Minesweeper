@@ -26,14 +26,9 @@
             <MenuItem Header="_Game">
                 <MenuItem Header="New Game" Command="{Binding RestartCommand}" />
                 <Separator />
-
-                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }"
-                          CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Beginner}" Click="Beginner" />
-                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }"
-                          CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Intermediate}"
-                          Click="Intermediate" />
-                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }"
-                          CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Expert}" Click="Expert" />
+                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Beginner}" Click="Beginner" />
+                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Intermediate}" Click="Intermediate" />
+                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Expert}" Click="Expert" />
                 <Separator />
                 <MenuItem Header="Exit" />
             </MenuItem>
@@ -138,16 +133,15 @@
                                                 <DataTrigger Binding="{Binding Cues}" Value="8">
                                                     <Setter  Property="Foreground" Value="Gray"/>
                                                 </DataTrigger>
-
                                             </Style.Triggers>
                                         </Style>
                                     </Label.Style>
                                 </Label>
                             </Grid>
                             <Button.InputBindings>
-                                <MouseBinding Gesture="RightClick"
-                                              Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                              CommandParameter="{Binding}" />
+                                <MouseBinding Gesture="RightClick" Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                <MouseBinding Gesture="MiddleClick" Command="{Binding Main.MultiRevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                
                             </Button.InputBindings>
                         </Button>
                     </DataTemplate>

@@ -97,8 +97,7 @@
                                         </Style>
                                     </Image.Style>
                                 </Image>
-                                <Label Margin="2,2,0,0" HorizontalAlignment="Center" FontWeight="Bold"
-                                       VerticalContentAlignment="Center">
+                                <Label Padding="2,0,0,0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" VerticalContentAlignment="Center">
                                     <Label.Style>
                                         <Style TargetType="Label">
                                             <Style.Triggers>
@@ -111,13 +110,35 @@
                                                 </MultiDataTrigger>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsFlagPlaced}" Value="False" />
                                                         <Condition Binding="{Binding Cues}" Value="0" />
-                                                        <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                        <Condition Binding="{Binding IsMine}" Value="False" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter Property="Content" Value="" />
                                                 </MultiDataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="1">
+                                                    <Setter  Property="Foreground" Value="Blue"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="2">
+                                                    <Setter  Property="Foreground" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="3">
+                                                    <Setter  Property="Foreground" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="4">
+                                                    <Setter  Property="Foreground" Value="DarkBlue"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="5">
+                                                    <Setter  Property="Foreground" Value="Brown"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="6">
+                                                    <Setter  Property="Foreground" Value="Cyan"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="7">
+                                                    <Setter  Property="Foreground" Value="Black"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Cues}" Value="8">
+                                                    <Setter  Property="Foreground" Value="Gray"/>
+                                                </DataTrigger>
+
                                             </Style.Triggers>
                                         </Style>
                                     </Label.Style>

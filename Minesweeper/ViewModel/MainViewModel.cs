@@ -31,7 +31,12 @@ namespace Minesweeper.ViewModel {
             _width = 8;
             _height = 8;
             _mineCount = 10;
-            Restart();
+
+            InitalizeFields();
+            _firstReveal = false;
+            _isMineHit = false;
+            _fieldsRevealed = 0;
+            _flagsRemaining = _mineCount;
         }
 
         public ICommand RestartCommand => new RelayCommand(Restart);
@@ -109,7 +114,7 @@ namespace Minesweeper.ViewModel {
             _firstReveal = false;
             _isMineHit = false;
             _fieldsRevealed = 0;
-            _flagsRemaining = _mineCount;
+            FlagsRemaining = _mineCount;
         }
 
         private void InitalizeFields() {

@@ -41,12 +41,7 @@ namespace Minesweeper.ViewModel {
                     return;
                 }
                 _selectedField = value;
-                //Fields[_selectedField].IsRevealed = true;
-
-                //if (Fields[_selectedField].Cues == 0) {}
-
                 RevealFields(Fields[_selectedField]);
-
                 RaisePropertyChanged();
             }
         }
@@ -107,8 +102,26 @@ namespace Minesweeper.ViewModel {
                 return;
             }
 
+            HashSet<Field> visited = new HashSet<Field>();
+            Queue<Field> queue = new Queue<Field>();
 
+            visited.Add(field);
+            queue.Enqueue(field);
 
+            while (queue.Count > 0) {
+                var current = queue.Dequeue();
+                current.IsRevealed = true;
+
+                if (current.Cues != 0) {
+                    continue;
+                }
+
+                foreach (var neightbour in GetNeightbours(current)) {
+                    if (visited.Add(neightbour)) {
+                        queue.Enqueue(neightbour);
+                    }
+                }
+            }
         }
 
         private List<Field> GetNeightbours(Field field) {

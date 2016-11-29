@@ -7,16 +7,18 @@ using Minesweeper.Model;
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
         private ObservableCollection<Field> _fields;
+        private List<Field> _mines;
         private int _height;
-        private readonly int _mines;
+        private readonly int _mineCount;
         private int _selectedField;
         private int _width;
 
         public MainViewModel() {
             _height = 8;
             _width = 8;
-            _mines = 8;
+            _mineCount = 8;
             _fields = new ObservableCollection<Field>();
+            _mines = new List<Field>();
             InitalizeFields();
             PlaceBombs();
             PlaceCues();
@@ -73,18 +75,14 @@ namespace Minesweeper.ViewModel {
         }
 
         private void PlaceCues() {
-            for (var i = 0; i < _width; i++) {
-                for (var j = 0; j < _height; j++) {
-                    // If mine, update adjacent fields with cues
-                    if (_fields[i + j*_height].IsMine) {
+            foreach (var mineField in _mines) {
+                var mineNeigbours = GetNeightbours(mineField);
 
-                        var mineNeigbours = GetNeightbours(_fields[i + j*_height]);
-
-                        foreach (var mineNeigbour in mineNeigbours) {
-                            if (!mineNeigbour.IsMine) {
-                                mineNeigbour.Cues++;
-                            }
-                        }
+                foreach (var mineNeigbour in mineNeigbours)
+                {
+                    if (!mineNeigbour.IsMine)
+                    {
+                        mineNeigbour.Cues++;
                     }
                 }
             }
@@ -99,6 +97,10 @@ namespace Minesweeper.ViewModel {
 
             if (field.IsMine) {
                 // Game over
+                foreach (var mine in _mines) {
+                    mine.IsRevealed = true;
+                }
+                
                 return;
             }
 
@@ -158,12 +160,12 @@ namespace Minesweeper.ViewModel {
 
             var bombsPlaced = 0;
 
-            while (bombsPlaced < _mines) {
+            while (bombsPlaced < _mineCount) {
                 var bombField = fields[rnd.Next(fields.Count)];
                 fields.Remove(bombField);
                 _fields[bombField].IsMine = true;
                 _fields[bombField].Cues = -1;
-
+                _mines.Add(_fields[bombField]);
                 bombsPlaced++;
             }
         }

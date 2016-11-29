@@ -1,4 +1,6 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Collections.Generic;
+using GalaSoft.MvvmLight;
 
 namespace Minesweeper.ViewModel {
 
@@ -6,6 +8,7 @@ namespace Minesweeper.ViewModel {
         private int[] _fields;
         private int _height;
         private int _width;
+        private int _bombs;
 
         public int Height {
             get { return _height;}
@@ -37,7 +40,9 @@ namespace Minesweeper.ViewModel {
         public MainViewModel() {
             _height = 8;
             _width = 8;
+            _bombs = 8;
             _fields = new int[_height * _width];
+            PlaceBombs();
         }
 
         public int[] Fields {
@@ -50,6 +55,25 @@ namespace Minesweeper.ViewModel {
         }
 
         private void InitalizeFields() {
+        }
+
+        private void PlaceBombs() {
+            Random rnd = new Random();
+            var fields = new List<int>();
+
+            for (int i = 0; i < _fields.Length; i++) {
+                fields.Add(i);
+            }
+
+            int bombsPlaced = 0;
+
+            while (bombsPlaced < _bombs) {
+                var bombField = fields[rnd.Next(fields.Count)];
+                fields.Remove(bombField);
+                _fields[bombField] = -1;
+
+                bombsPlaced++;
+            }
         }
     }
 }

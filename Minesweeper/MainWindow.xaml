@@ -19,19 +19,18 @@
     </Window.Resources>
 
     <Grid x:Name="LayoutRoot">
-            <ItemsControl ItemsSource="{Binding Fields}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}">
-                        </UniformGrid>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ToggleButton Content="{Binding}"></ToggleButton>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-           
-            </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Fields}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}">
+                    </UniformGrid>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ToggleButton Content="{Binding}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>

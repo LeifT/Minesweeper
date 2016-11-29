@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
-
     public class MainViewModel : ViewModelBase {
-        private Field[] _fields;
+        private ObservableCollection<Field> _fields;
         private int _height;
+        private readonly int _mines;
+        private int _selectedField;
         private int _width;
-        private int _mines;
+
+        public MainViewModel() {
+            _height = 8;
+            _width = 8;
+            _mines = 8;
+            _fields = new ObservableCollection<Field>();
+            InitalizeFields();
+            PlaceBombs();
+            PlaceCues();
+        }
 
         public int Height {
-            get { return _height;}
+            get { return _height; }
             set {
                 if (_height == value) {
                     return;
@@ -23,13 +34,27 @@ namespace Minesweeper.ViewModel {
             }
         }
 
-        public int Width
-        {
+        public int SelectedField {
+            get { return _selectedField; }
+            set {
+                if (_selectedField == value) {
+                    return;
+                }
+                _selectedField = value;
+                //Fields[_selectedField].IsRevealed = true;
+
+                //if (Fields[_selectedField].Cues == 0) {}
+
+                RevealFields(Fields[_selectedField]);
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int Width {
             get { return _width; }
-            set
-            {
-                if (_width == value)
-                {
+            set {
+                if (_width == value) {
                     return;
                 }
 
@@ -38,19 +63,8 @@ namespace Minesweeper.ViewModel {
             }
         }
 
-        public MainViewModel() {
-            _height = 8;
-            _width = 8;
-            _mines = 8;
-            _fields = new Field[_height * _width];
-            InitalizeFields();
-            PlaceBombs();
-            PlaceCues();
-        }
-
-        public Field[] Fields {
+        public ObservableCollection<Field> Fields {
             get { return _fields; }
-
             set {
                 _fields = value;
                 RaisePropertyChanged();
@@ -58,36 +72,22 @@ namespace Minesweeper.ViewModel {
         }
 
         private void InitalizeFields() {
-            for (int i = 0; i < _fields.Length; i++) {
-                _fields[i] = new Field(i % _width, i / _height);
+            for (var i = 0; i < _width*_height; i++) {
+                _fields.Add(new Field(i%_width, i/_height));
             }
         }
 
         private void PlaceCues() {
-            for (int i = 0; i < _width; i++) {
-                for (int j = 0; j < _height; j++) {
-
+            for (var i = 0; i < _width; i++) {
+                for (var j = 0; j < _height; j++) {
                     // If mine, update adjacent fields with cues
                     if (_fields[i + j*_height].IsMine) {
-                        for (int k = -1; k < 2; k++) {
-                            for (int l = -1; l < 2; l++) {
-                                if (k == 0 && l == 0) {
-                                    continue;
-                                }
 
-                                if (i + k < 0 || i + k >= _width) {
-                                    continue;
-                                }
+                        var mineNeigbours = GetNeightbours(_fields[i + j*_height]);
 
-                                if (j + l < 0 || j + l >= _height) {
-                                    continue;
-                                }
-
-                                if (_fields[i + k + (j + l)*_height].IsMine) {
-                                    continue;
-                                }
-
-                                _fields[i + k + (j + l) * _height].Cues++;
+                        foreach (var mineNeigbour in mineNeigbours) {
+                            if (!mineNeigbour.IsMine) {
+                                mineNeigbour.Cues++;
                             }
                         }
                     }
@@ -95,20 +95,61 @@ namespace Minesweeper.ViewModel {
             }
         }
 
+        private void RevealFields(Field field) {
+            field.IsRevealed = true;
+
+            if (field.Cues > 0) {
+                return;
+            }
+
+            if (field.IsMine) {
+                // Game over
+                return;
+            }
+
+
+
+        }
+
+        private List<Field> GetNeightbours(Field field) {
+            List<Field> neightoubrs = new List<Field>();
+
+            for (var i = -1; i < 2; i++) {
+                for (var j = -1; j < 2; j++) {
+                    if ((i == 0) && (j == 0)) {
+                        continue;
+                    }
+
+                    if ((field.X + i < 0) || (field.X + i >= _width)) {
+                        continue;
+                    }
+
+                    if ((field.Y + j < 0) || (field.Y + j >= _height)) {
+                        continue;
+                    }
+
+                    neightoubrs.Add(_fields[field.X + i + (field.Y + j) * _height]);
+                }
+            }
+
+            return neightoubrs;
+        }
+
         private void PlaceBombs() {
-            Random rnd = new Random();
+            var rnd = new Random();
             var fields = new List<int>();
 
-            for (int i = 0; i < _fields.Length; i++) {
+            for (var i = 0; i < _fields.Count; i++) {
                 fields.Add(i);
             }
 
-            int bombsPlaced = 0;
+            var bombsPlaced = 0;
 
             while (bombsPlaced < _mines) {
                 var bombField = fields[rnd.Next(fields.Count)];
                 fields.Remove(bombField);
                 _fields[bombField].IsMine = true;
+                _fields[bombField].Cues = -1;
 
                 bombsPlaced++;
             }

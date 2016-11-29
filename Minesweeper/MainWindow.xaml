@@ -18,12 +18,44 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid x:Name="LayoutRoot">
-        <ItemsControl ItemsSource="{Binding Fields}">
+    <Grid>
+        <ListBox HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedIndex="{Binding SelectedField}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ToggleButton IsChecked="{Binding IsRevealed}" Content="{Binding Cues}" IsHitTestVisible="False">
+                        <!--<ToggleButton.Style>
+                            <Style TargetType="ToggleButton">
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Content" Value="{Binding Cues}" />
+                                    </Trigger>
+                                    <Trigger Property="IsChecked" Value="False">
+                                        <Setter Property="Content" Value="" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>-->
+                    </ToggleButton>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <!--<ItemsControl ItemsSource="{Binding Fields}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}">
-                    </UniformGrid>
+                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
@@ -34,6 +66,6 @@
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        </ItemsControl>-->
     </Grid>
 </Window>

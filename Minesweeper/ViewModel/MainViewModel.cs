@@ -8,7 +8,7 @@ namespace Minesweeper.ViewModel {
         private int[] _fields;
         private int _height;
         private int _width;
-        private int _bombs;
+        private int _mines;
 
         public int Height {
             get { return _height;}
@@ -40,9 +40,10 @@ namespace Minesweeper.ViewModel {
         public MainViewModel() {
             _height = 8;
             _width = 8;
-            _bombs = 8;
+            _mines = 8;
             _fields = new int[_height * _width];
             PlaceBombs();
+            PlaceCues();
         }
 
         public int[] Fields {
@@ -55,6 +56,39 @@ namespace Minesweeper.ViewModel {
         }
 
         private void InitalizeFields() {
+
+        }
+
+        private void PlaceCues() {
+            for (int i = 0; i < _width; i++) {
+                for (int j = 0; j < _height; j++) {
+
+                    // If mine, update adjacent fields with cues
+                    if (_fields[i + j*_height] == -1) {
+                        for (int k = -1; k < 2; k++) {
+                            for (int l = -1; l < 2; l++) {
+                                if (k == 0 && l == 0) {
+                                    continue;
+                                }
+
+                                if (i + k < 0 || i + k >= _width) {
+                                    continue;
+                                }
+
+                                if (j + l < 0 || j + l >= _height) {
+                                    continue;
+                                }
+
+                                if (_fields[i + k + (j + l)*_height] == -1) {
+                                    continue;
+                                }
+
+                                _fields[i + k + (j + l) * _height]++;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void PlaceBombs() {
@@ -67,7 +101,7 @@ namespace Minesweeper.ViewModel {
 
             int bombsPlaced = 0;
 
-            while (bombsPlaced < _bombs) {
+            while (bombsPlaced < _mines) {
                 var bombField = fields[rnd.Next(fields.Count)];
                 fields.Remove(bombField);
                 _fields[bombField] = -1;

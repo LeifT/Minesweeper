@@ -89,11 +89,11 @@ namespace Minesweeper.ViewModel {
         }
 
         private void PlaceFlag(Field field) {
-            field.FlagPlaced = !field.FlagPlaced;
+            field.IsFlagPlaced = !field.IsFlagPlaced;
         }
 
         private void Reveal(Field field) {
-            if ((Fields.Count == 0) || field.IsRevealed || field.FlagPlaced) {
+            if ((Fields.Count == 0) || field.IsRevealed || field.IsFlagPlaced) {
                 return;
             }
 
@@ -116,6 +116,13 @@ namespace Minesweeper.ViewModel {
                 foreach (var mine in _mines) {
                     mine.IsRevealed = true;
                 }
+
+                foreach (var field2 in _fields) {
+                    if (field2.IsFlagPlaced && !field2.IsMine) {
+                        field2.IsFlagMissPlaced = true;
+                    }
+                }
+
                 return;
             } else {
                 var visited = new HashSet<Field>();
@@ -127,7 +134,7 @@ namespace Minesweeper.ViewModel {
                 while (queue.Count > 0) {
                     var current = queue.Dequeue();
 
-                    if (!current.FlagPlaced) {
+                    if (!current.IsFlagPlaced) {
                         current.IsRevealed = true;
                         _fieldsRevealed++;
                     }

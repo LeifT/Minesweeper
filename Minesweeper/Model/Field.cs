@@ -4,21 +4,35 @@ namespace Minesweeper.Model {
     public class Field : ViewModelBase {
         private bool _isRevealed;
         private bool _isMine;
-        private bool _flagPlaced;
+        private bool _isFlagPlaced;
+        private bool _isFlagMissPlaced;
         private int _cues;
         public int X { get; set; }
         public int Y { get; set; }
 
-        public bool FlagPlaced
+        public bool IsFlagPlaced
         {
-            get { return _flagPlaced; }
+            get { return _isFlagPlaced; }
             set
             {
-                if (_flagPlaced == value) {
+                if (_isFlagPlaced == value) {
                     return;
                 }
                 
-                _flagPlaced = value;
+                _isFlagPlaced = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsFlagMissPlaced
+        {
+            get { return _isFlagMissPlaced; }
+            set {
+                if (_isFlagMissPlaced == value) {
+                    return;
+                }
+
+                _isFlagMissPlaced = value;
                 RaisePropertyChanged();
             }
         }

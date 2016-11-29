@@ -61,10 +61,17 @@
 
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsRevealed}" Value="False" />
-                                                    <Condition Binding="{Binding FlagPlaced}" Value="True" />
+                                                    <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter Property="Source" Value="Icons/flag.png" />
+                                            </MultiDataTrigger>
+
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
+                                                    <Condition Binding="{Binding IsFlagMissPlaced}" Value="True" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Source" Value="Icons/miss.png" />
                                             </MultiDataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -85,7 +92,7 @@
 
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding FlagPlaced}" Value="False" />
+                                                    <Condition Binding="{Binding IsFlagPlaced}" Value="False" />
                                                     <Condition Binding="{Binding Cues}" Value="0" />
                                                     <Condition Binding="{Binding IsRevealed}" Value="True" />
                                                     <Condition Binding="{Binding IsMine}" Value="False" />

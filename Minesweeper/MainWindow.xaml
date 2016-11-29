@@ -47,11 +47,26 @@
                     <ToggleButton IsChecked="{Binding IsRevealed}" IsHitTestVisible="False">
                         <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
-                                <Setter Property="Content" Value="{Binding Cues}"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsMine}" Value="True">
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsRevealed}" Value="True"/>
+                                            <Condition Binding="{Binding IsMine}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Content" Value="{Binding Cues}"/>
+                                    </MultiDataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsRevealed}" Value="True"/>
+                                            <Condition Binding="{Binding IsMine}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
                                         <Setter Property="Content" Value="Mine"/>
-                                    </DataTrigger>
+                                    </MultiDataTrigger>
+
+                                    <!--<DataTrigger Binding="{Binding IsMine}" Value="True">
+                                        <Setter Property="Content" Value="Mine"/>
+                                    </DataTrigger>-->
                                     <DataTrigger Binding="{Binding Cues}" Value="0">
                                         <Setter Property="Content" Value=""/>
                                     </DataTrigger>

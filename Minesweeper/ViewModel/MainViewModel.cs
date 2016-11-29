@@ -15,13 +15,13 @@ namespace Minesweeper.ViewModel {
         private int _selectedField;
         private int _width;
         private int _fieldsRevealed;
-        private bool firstReveal;
+        private bool _firstReveal;
 
         public ICommand RestartCommand => new RelayCommand(Restart);
 
         private void Restart() {
             InitalizeFields();
-            firstReveal = false;
+            _firstReveal = false;
             _fieldsRevealed = 0;
         }
 
@@ -60,8 +60,8 @@ namespace Minesweeper.ViewModel {
                     return;
                 }
 
-                if (!firstReveal) {
-                    firstReveal = true;
+                if (!_firstReveal) {
+                    _firstReveal = true;
                     PlaceBombs();
                     PlaceCues();
                 }
@@ -121,6 +121,7 @@ namespace Minesweeper.ViewModel {
                 foreach (var mine in _mines) {
                     mine.IsRevealed = true;
                 }
+                Console.WriteLine("Game over");
                 return;
             } else {
                 var visited = new HashSet<Field>();

@@ -39,8 +39,8 @@ namespace Minesweeper.Model {
         public Field(int x, int y) {
             X = x;
             Y = y;
-            IsMine = false;
-            Cues = 0;
+            _isMine = false;
+            _cues = 0;
             _isRevealed = false;
         }
 

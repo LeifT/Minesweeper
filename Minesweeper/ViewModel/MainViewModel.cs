@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
@@ -13,6 +15,15 @@ namespace Minesweeper.ViewModel {
         private int _selectedField;
         private int _width;
         private int _fieldsRevealed;
+
+        public ICommand RestartCommand => new RelayCommand(Restart);
+
+        private void Restart() {
+            InitalizeFields();
+            PlaceBombs();
+            PlaceCues();
+            _fieldsRevealed = 0;
+        }
 
         public MainViewModel() {
             _height = 8;
@@ -44,7 +55,14 @@ namespace Minesweeper.ViewModel {
                 if (_selectedField == value) {
                     return;
                 }
+
                 _selectedField = value;
+
+                if (Fields[_selectedField].IsRevealed) {
+                    return;
+                }
+
+                
                 RevealFields(Fields[_selectedField]);
                 RaisePropertyChanged();
             }
@@ -71,6 +89,8 @@ namespace Minesweeper.ViewModel {
         }
 
         private void InitalizeFields() {
+            _fields.Clear();
+
             for (var i = 0; i < _width*_height; i++) {
                 _fields.Add(new Field(i%_width, i/_height));
             }
@@ -124,6 +144,7 @@ namespace Minesweeper.ViewModel {
             }
 
             if (_fieldsRevealed == _width * _height - _mineCount) {
+                Console.WriteLine("Victory");
                 // Victory
             }
         }
@@ -153,6 +174,8 @@ namespace Minesweeper.ViewModel {
         }
 
         private void PlaceBombs() {
+            _mines.Clear();
+
             var rnd = new Random();
             var fields = new List<int>();
 

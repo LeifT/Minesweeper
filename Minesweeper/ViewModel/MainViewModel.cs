@@ -32,9 +32,7 @@ namespace Minesweeper.ViewModel {
             _fields = new ObservableCollection<Field>();
             _mines = new List<Field>();
 
-            InitalizeFields();
-            PlaceBombs();
-            PlaceCues();
+            Restart();
         }
 
         public int Height {
@@ -58,7 +56,7 @@ namespace Minesweeper.ViewModel {
 
                 _selectedField = value;
 
-                if (Fields[_selectedField].IsRevealed) {
+                if (Fields.Count == 0 || Fields[_selectedField].IsRevealed) {
                     return;
                 }
 
@@ -136,6 +134,10 @@ namespace Minesweeper.ViewModel {
                     }
 
                     foreach (var neightbour in GetNeightbours(current)) {
+                        if (neightbour.IsRevealed) {
+                            continue;
+                        }
+
                         if (visited.Add(neightbour)) {
                             queue.Enqueue(neightbour);
                         }

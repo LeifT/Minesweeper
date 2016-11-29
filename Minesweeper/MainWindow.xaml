@@ -29,7 +29,7 @@
             <Button Content="Restart" Command="{Binding RestartCommand }"/>
         </StackPanel>
         
-        <ListBox Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedIndex="{Binding SelectedField, Mode=OneWay}">
+        <ListBox Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedIndex="{Binding SelectedField}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}"/>

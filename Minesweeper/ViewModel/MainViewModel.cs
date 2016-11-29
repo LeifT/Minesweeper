@@ -1,65 +1,55 @@
 ﻿using GalaSoft.MvvmLight;
-using Minesweeper.Model;
 
-namespace Minesweeper.ViewModel
-{
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// See http://www.mvvmlight.net
-    /// </para>
-    /// </summary>
-    public class MainViewModel : ViewModelBase
-    {
-        private readonly IDataService _dataService;
+namespace Minesweeper.ViewModel {
 
-        /// <summary>
-        /// The <see cref="WelcomeTitle" /> property's name.
-        /// </summary>
-        public const string WelcomeTitlePropertyName = "WelcomeTitle";
+    public class MainViewModel : ViewModelBase {
+        private int[] _fields;
+        private int _height;
+        private int _width;
 
-        private string _welcomeTitle = string.Empty;
+        public int Height {
+            get { return _height;}
+            set {
+                if (_height == value) {
+                    return;
+                }
 
-        /// <summary>
-        /// Gets the WelcomeTitle property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public string WelcomeTitle
-        {
-            get
-            {
-                return _welcomeTitle;
+                _height = value;
+                RaisePropertyChanged();
             }
+        }
+
+        public int Width
+        {
+            get { return _width; }
             set
             {
-                Set(ref _welcomeTitle, value);
+                if (_width == value)
+                {
+                    return;
+                }
+
+                _width = value;
+                RaisePropertyChanged();
             }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
-        public MainViewModel(IDataService dataService)
-        {
-            _dataService = dataService;
-            _dataService.GetData(
-                (item, error) =>
-                {
-                    if (error != null)
-                    {
-                        // Report error here
-                        return;
-                    }
-
-                    WelcomeTitle = item.Title;
-                });
+        public MainViewModel() {
+            _height = 8;
+            _width = 8;
+            _fields = new int[_height * _width];
         }
 
-        ////public override void Cleanup()
-        ////{
-        ////    // Clean up if needed
+        public int[] Fields {
+            get { return _fields; }
 
-        ////    base.Cleanup();
-        ////}
+            set {
+                _fields = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private void InitalizeFields() {
+        }
     }
 }

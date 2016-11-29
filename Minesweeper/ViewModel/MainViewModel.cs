@@ -9,21 +9,16 @@ using Minesweeper.Model;
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
         private readonly int _mineCount;
-        private ObservableCollection<Field> _fields;
-        private int _height;
         private readonly List<Field> _mines;
-        //private int _selectedField;
-        private int _width;
+        private ObservableCollection<Field> _fields;
         private int _fieldsRevealed;
         private bool _firstReveal;
+        private int _height;
+        private int _width;
 
         public ICommand RestartCommand => new RelayCommand(Restart);
-
-        private void Restart() {
-            InitalizeFields();
-            _firstReveal = false;
-            _fieldsRevealed = 0;
-        }
+        public ICommand RevealCommand => new RelayCommand<Field>(Reveal);
+        public ICommand PlaceFlagCommand => new RelayCommand<Field>(PlaceFlag);
 
         public MainViewModel() {
             _height = 8;
@@ -47,30 +42,6 @@ namespace Minesweeper.ViewModel {
             }
         }
 
-        //public int SelectedField {
-        //    get { return _selectedField; }
-        //    set {
-        //        if (_selectedField == value) {
-        //            return;
-        //        }
-
-        //        _selectedField = value;
-
-        //        if (Fields.Count == 0 || Fields[_selectedField].IsRevealed) {
-        //            return;
-        //        }
-
-        //        if (!_firstReveal) {
-        //            _firstReveal = true;
-        //            PlaceBombs();
-        //            PlaceCues();
-        //        }
-                
-        //        RevealFields(Fields[_selectedField]);
-        //        RaisePropertyChanged();
-        //    }
-        //}
-
         public int Width {
             get { return _width; }
             set {
@@ -91,11 +62,17 @@ namespace Minesweeper.ViewModel {
             }
         }
 
+        private void Restart() {
+            InitalizeFields();
+            _firstReveal = false;
+            _fieldsRevealed = 0;
+        }
+
         private void InitalizeFields() {
             _fields.Clear();
 
             for (var i = 0; i < _width*_height; i++) {
-                _fields.Add(new Field(i%_width, i/_height));
+                _fields.Add(new Field(i%_width, i/_width));
             }
         }
 
@@ -111,15 +88,12 @@ namespace Minesweeper.ViewModel {
             }
         }
 
-        public ICommand RevealCommand => new RelayCommand<Field>(Reveal);
-        public ICommand PlaceFlagCommand => new RelayCommand<Field>(PlaceFlag);
-
         private void PlaceFlag(Field field) {
             field.FlagPlaced = !field.FlagPlaced;
         }
 
         private void Reveal(Field field) {
-            if (Fields.Count == 0 || field.IsRevealed || field.FlagPlaced) {
+            if ((Fields.Count == 0) || field.IsRevealed || field.FlagPlaced) {
                 return;
             }
 
@@ -135,13 +109,13 @@ namespace Minesweeper.ViewModel {
             if (field.Cues > 0) {
                 field.IsRevealed = true;
                 _fieldsRevealed++;
-               
-            } else if (field.IsMine) {
-                // Game over
+            }
+            // Game over
+            else if (field.IsMine) {
+                
                 foreach (var mine in _mines) {
                     mine.IsRevealed = true;
                 }
-                Console.WriteLine("Game over");
                 return;
             } else {
                 var visited = new HashSet<Field>();
@@ -174,8 +148,7 @@ namespace Minesweeper.ViewModel {
                 }
             }
 
-            if (_fieldsRevealed == _width * _height - _mineCount) {
-                Console.WriteLine("Victory");
+            if (_fieldsRevealed == _width*_height - _mineCount) {
                 // Victory
             }
         }
@@ -197,7 +170,7 @@ namespace Minesweeper.ViewModel {
                         continue;
                     }
 
-                    neightoubrs.Add(_fields[field.X + i + (field.Y + j)*_height]);
+                    neightoubrs.Add(_fields[field.X + i + (field.Y + j)*_width]);
                 }
             }
 

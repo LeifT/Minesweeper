@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using GalaSoft.MvvmLight;
-using Minesweeper.Annotations;
+﻿using GalaSoft.MvvmLight;
 
 namespace Minesweeper.Model {
     public class Field : ViewModelBase {

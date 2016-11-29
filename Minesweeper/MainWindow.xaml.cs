@@ -16,5 +16,20 @@ namespace Minesweeper
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();
         }
+
+        private void Beginner(object sender, RoutedEventArgs e) {
+            MinHeight = 360;
+            MinWidth = 280;
+        }
+
+        private void Intermediate(object sender, RoutedEventArgs e) {
+            MinHeight = 616;
+            MinWidth = 536;
+        }
+
+        private void Expert(object sender, RoutedEventArgs e) {
+            MinHeight = 616;
+            MinWidth = 984;
+        }
     }
 }

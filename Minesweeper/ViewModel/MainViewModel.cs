@@ -8,17 +8,20 @@ using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
-        private readonly int _mineCount;
+        public enum Difficulty {
+            Beginner,
+            Intermediate,
+            Expert
+        }
+
+        private int _mineCount;
         private readonly List<Field> _mines;
         private ObservableCollection<Field> _fields;
         private int _fieldsRevealed;
         private bool _firstReveal;
         private int _height;
+        private bool _isMineHit;
         private int _width;
-
-        public ICommand RestartCommand => new RelayCommand(Restart);
-        public ICommand RevealCommand => new RelayCommand<Field>(Reveal);
-        public ICommand PlaceFlagCommand => new RelayCommand<Field>(PlaceFlag);
 
         public MainViewModel() {
             _height = 8;
@@ -29,6 +32,11 @@ namespace Minesweeper.ViewModel {
 
             Restart();
         }
+
+        public ICommand RestartCommand => new RelayCommand(Restart);
+        public ICommand RevealCommand => new RelayCommand<Field>(Reveal);
+        public ICommand PlaceFlagCommand => new RelayCommand<Field>(PlaceFlag);
+        public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficulty);
 
         public int Height {
             get { return _height; }
@@ -62,9 +70,32 @@ namespace Minesweeper.ViewModel {
             }
         }
 
+        private void SetDifficulty(Difficulty difficulty) {
+            switch (difficulty) {
+                case Difficulty.Beginner:
+                    Width = 8;
+                    Height = 8;
+                    _mineCount = 10;
+                    break;
+                case Difficulty.Intermediate:
+                    Width = 16;
+                    Height = 16;
+                    _mineCount = 40;
+                    break;
+                case Difficulty.Expert:
+                    Width = 30;
+                    Height = 16;
+                    _mineCount = 99;
+                    break;
+            }
+
+            Restart();
+        }
+
         private void Restart() {
             InitalizeFields();
             _firstReveal = false;
+            _isMineHit = false;
             _fieldsRevealed = 0;
         }
 
@@ -89,7 +120,7 @@ namespace Minesweeper.ViewModel {
         }
 
         private void PlaceFlag(Field field) {
-            if (field.IsRevealed) {
+            if (field.IsRevealed || _isMineHit) {
                 return;
             }
 
@@ -97,7 +128,7 @@ namespace Minesweeper.ViewModel {
         }
 
         private void Reveal(Field field) {
-            if ((Fields.Count == 0) || field.IsRevealed || field.IsFlagPlaced) {
+            if ((Fields.Count == 0) || field.IsRevealed || field.IsFlagPlaced || _isMineHit) {
                 return;
             }
 
@@ -110,57 +141,66 @@ namespace Minesweeper.ViewModel {
         }
 
         private void RevealFields(Field field) {
+            if (field.IsMine) {
+                field.IsRevealed = true;
+                GameOver();
+                return;
+            }
+
             if (field.Cues > 0) {
                 field.IsRevealed = true;
                 _fieldsRevealed++;
-            }
-            // Game over
-            else if (field.IsMine) {
-                
-                foreach (var mine in _mines) {
-                    mine.IsRevealed = true;
-                }
-
-                foreach (var field2 in _fields) {
-                    if (field2.IsFlagPlaced && !field2.IsMine) {
-                        field2.IsFlagMissPlaced = true;
-                    }
-                }
-
-                return;
             } else {
-                var visited = new HashSet<Field>();
-                var queue = new Queue<Field>();
-
-                visited.Add(field);
-                queue.Enqueue(field);
-
-                while (queue.Count > 0) {
-                    var current = queue.Dequeue();
-
-                    if (!current.IsFlagPlaced) {
-                        current.IsRevealed = true;
-                        _fieldsRevealed++;
-                    }
-
-                    if (current.Cues != 0) {
-                        continue;
-                    }
-
-                    foreach (var neightbour in GetNeightbours(current)) {
-                        if (neightbour.IsRevealed) {
-                            continue;
-                        }
-
-                        if (visited.Add(neightbour)) {
-                            queue.Enqueue(neightbour);
-                        }
-                    }
-                }
+                RevealEmptyFields(field);
             }
 
             if (_fieldsRevealed == _width*_height - _mineCount) {
                 // Victory
+            }
+        }
+
+        private void RevealEmptyFields(Field field) {
+            var visited = new HashSet<Field>();
+            var queue = new Queue<Field>();
+
+            visited.Add(field);
+            queue.Enqueue(field);
+
+            while (queue.Count > 0) {
+                var current = queue.Dequeue();
+
+                if (!current.IsFlagPlaced) {
+                    current.IsRevealed = true;
+                    _fieldsRevealed++;
+                }
+
+                if (current.Cues != 0) {
+                    continue;
+                }
+
+                foreach (var neightbour in GetNeightbours(current)) {
+                    if (neightbour.IsRevealed) {
+                        continue;
+                    }
+
+                    if (visited.Add(neightbour)) {
+                        queue.Enqueue(neightbour);
+                    }
+                }
+            }
+        }
+
+        private void GameOver() {
+            _isMineHit = true;
+
+            foreach (var mine in _mines) {
+                mine.IsRevealed = true;
+            }
+
+            foreach (var field in _fields) {
+                if (field.IsFlagPlaced && !field.IsMine) {
+                    field.IsFlagMissPlaced = true;
+                }
             }
         }
 

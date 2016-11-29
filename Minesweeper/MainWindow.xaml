@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:viewModel="clr-namespace:Minesweeper.ViewModel"
         mc:Ignorable="d ignore"
         Height="360"
-        Width="300"
+        MinHeight="360"
+        MinWidth="280"
+        Width="280"
         Title="Minesweeper"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
 
@@ -17,100 +20,114 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+    
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Game">
+                <MenuItem Header="New Game" Command="{Binding RestartCommand}"/>
+                <Separator/>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }"  CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Beginner}" Click="Beginner" />
+                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Intermediate}" Click="Intermediate"/>
+                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Expert}" Click="Expert"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <Label Content="" />
-            <Button Content="Restart" Command="{Binding RestartCommand }" />
-        </StackPanel>
 
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}" Width="256" Height="256">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Width="32" Height="32" Padding="0" BorderThickness="0" Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}">
-                        <Grid>
-                            <Image SnapsToDevicePixels="True">
-                                <Image.Style>
-                                    <Style TargetType="Image">
-                                        <Setter Property="Source" Value="Icons/field.png"/>
-                                        <Style.Triggers>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                    <Condition Binding="{Binding IsMine}" Value="False" />
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Source" Value="Icons/empty.png" />
-                                            </MultiDataTrigger>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                    <Condition Binding="{Binding IsMine}" Value="True" />
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Source" Value="Icons/mine.png" />
-                                            </MultiDataTrigger>
+           
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Width="32" Height="32" Padding="0" BorderThickness="0" Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}">
+                                <Grid>
+                                    <Image SnapsToDevicePixels="True">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Source" Value="Icons/field.png"/>
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsRevealed}" Value="True" />
+                                                            <Condition Binding="{Binding IsMine}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Source" Value="Icons/empty.png" />
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsRevealed}" Value="True" />
+                                                            <Condition Binding="{Binding IsMine}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Source" Value="Icons/mine.png" />
+                                                    </MultiDataTrigger>
 
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Source" Value="Icons/flag.png" />
-                                            </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Source" Value="Icons/flag.png" />
+                                                    </MultiDataTrigger>
 
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
-                                                    <Condition Binding="{Binding IsFlagMissPlaced}" Value="True" />
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Source" Value="Icons/miss.png" />
-                                            </MultiDataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
+                                                            <Condition Binding="{Binding IsFlagMissPlaced}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Source" Value="Icons/miss.png" />
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
 
-                            <Label Margin="2,2,0,0"  HorizontalAlignment="Center" FontWeight="Bold" VerticalContentAlignment="Center">
-                                <Label.Style>
-                                    <Style TargetType="Label">
-                                        <Style.Triggers>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                    <Condition Binding="{Binding IsMine}" Value="False" />
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Content" Value="{Binding Cues}"/>
-                                            </MultiDataTrigger>
+                                    <Label Margin="2,2,0,0"  HorizontalAlignment="Center" FontWeight="Bold" VerticalContentAlignment="Center">
+                                        <Label.Style>
+                                            <Style TargetType="Label">
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsRevealed}" Value="True" />
+                                                            <Condition Binding="{Binding IsMine}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Content" Value="{Binding Cues}"/>
+                                                    </MultiDataTrigger>
 
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding IsFlagPlaced}" Value="False" />
-                                                    <Condition Binding="{Binding Cues}" Value="0" />
-                                                    <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                    <Condition Binding="{Binding IsMine}" Value="False" />
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Content" Value="" />
-                                            </MultiDataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Label.Style>
-                            </Label>
-                        </Grid>
-                        
-                        <Button.InputBindings>
-                            <MouseBinding Gesture="RightClick" Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
-                        </Button.InputBindings>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsFlagPlaced}" Value="False" />
+                                                            <Condition Binding="{Binding Cues}" Value="0" />
+                                                            <Condition Binding="{Binding IsRevealed}" Value="True" />
+                                                            <Condition Binding="{Binding IsMine}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Content" Value="" />
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
+                                </Grid>
+
+                                <Button.InputBindings>
+                                    <MouseBinding Gesture="RightClick" Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                </Button.InputBindings>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            
+            
+        </Grid>
+    </DockPanel>
+   
 </Window>

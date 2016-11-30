@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
-        xmlns:viewModel="clr-namespace:Minesweeper.ViewModel"
         xmlns:model="clr-namespace:Minesweeper.Model"
         mc:Ignorable="d ignore"
         Height="360"
@@ -27,9 +26,9 @@
             <MenuItem Header="_Game">
                 <MenuItem Header="New Game" Command="{Binding RestartCommand}" />
                 <Separator />
-                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Beginner}" Click="Beginner" />
-                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Intermediate}" Click="Intermediate" />
-                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Expert}" Click="Expert" />
+                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static model:GameBoard+Difficulty.Beginner}" Click="Beginner" />
+                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static model:GameBoard+Difficulty.Intermediate}" Click="Intermediate" />
+                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static model:GameBoard+Difficulty.Expert}" Click="Expert" />
                 <Separator />
                 <MenuItem Header="Exit" />
             </MenuItem>
@@ -42,22 +41,13 @@
             
             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock FontSize="16" Text="Flags Remaining: "/>
-                <TextBlock FontSize="16" Text="{Binding FlagsRemaining}"/>
+                <TextBlock FontSize="16" Text="{Binding GameBoard.FlagsRemaining}"/>
             </StackPanel>
             
-            
-            
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}">
-                <!--<ItemsControl.Style>
-                    <Style>
-                        <Setter Property="Border.BorderThickness" Value="6"/>
-                        <Setter Property="Border.BorderBrush" Value="Black"/>
-                    </Style>
-                </ItemsControl.Style>-->
-                
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoard.Fields}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="{Binding Height}"  Columns="{Binding Width}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <UniformGrid Rows="{Binding GameBoard.Height}"  Columns="{Binding GameBoard.Width}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

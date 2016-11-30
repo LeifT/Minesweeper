@@ -60,16 +60,14 @@ namespace Minesweeper.ViewModel {
 
             if (neigthbouringFlags >= field.Cues) {
                 foreach (var neightbour in GetNeightbours(field)) {
-                    if (neightbour.IsRevealed || neightbour.IsFlagPlaced) {
+                    if (neightbour.IsRevealed || neightbour.IsFlagPlaced || neightbour.IsQuestionPlaced) {
                         continue;
                     }
                     RevealFields(neightbour);
                 }
             }
         }
-
         
-
         public int Height {
             get { return _height; }
             set {
@@ -178,17 +176,21 @@ namespace Minesweeper.ViewModel {
                 return;
             }
 
-            field.IsFlagPlaced = !field.IsFlagPlaced;
-
-            if (field.IsFlagPlaced) {
+            if (!field.IsFlagPlaced && !field.IsQuestionPlaced) {
+                field.IsFlagPlaced = true;
                 FlagsRemaining--;
-            } else {
+            } else if (field.IsFlagPlaced) {
+                field.IsFlagPlaced = false;
+                field.IsQuestionPlaced = true;
                 FlagsRemaining++;
+            } else {
+                field.IsFlagPlaced = false;
+                field.IsQuestionPlaced = false;
             }
         }
 
         private void Reveal(Field field) {
-            if ((Fields.Count == 0) || field.IsRevealed || field.IsFlagPlaced || _isMineHit) {
+            if ((Fields.Count == 0) || field.IsRevealed || field.IsFlagPlaced || _isMineHit || field.IsQuestionPlaced) {
                 return;
             }
 
@@ -199,8 +201,6 @@ namespace Minesweeper.ViewModel {
             }
             RevealFields(field);
         }
-
-        
 
         private void RevealFields(Field field) {
             if (field.IsMine) {

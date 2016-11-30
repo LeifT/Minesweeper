@@ -44,17 +44,24 @@
                 <TextBlock FontSize="16" Text="{Binding FlagsRemaining}"/>
             </StackPanel>
             
+            
+            
             <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}">
+                <!--<ItemsControl.Style>
+                    <Style>
+                        <Setter Property="Border.BorderThickness" Value="6"/>
+                        <Setter Property="Border.BorderBrush" Value="Black"/>
+                    </Style>
+                </ItemsControl.Style>-->
+                
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Width="32" Height="32" Padding="0" BorderThickness="0"
-                                Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                CommandParameter="{Binding}">
+                        <Button Width="32" Height="32" Padding="0" BorderThickness="0" Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}">
                             <Grid>
                                 <Image SnapsToDevicePixels="True">
                                     <Image.Style>
@@ -80,6 +87,12 @@
                                                         <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter Property="Source" Value="Icons/flag.png" />
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsQuestionPlaced}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Source" Value="Icons/question.png" />
                                                 </MultiDataTrigger>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
@@ -139,9 +152,8 @@
                                 </Label>
                             </Grid>
                             <Button.InputBindings>
-                                <MouseBinding Gesture="RightClick" Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
-                                <MouseBinding Gesture="MiddleClick" Command="{Binding Main.MultiRevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
-                                
+                                <MouseBinding Gesture="RightClick" Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
+                                <MouseBinding Gesture="MiddleClick" Command="{Binding Main.MultiRevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}"/>
                             </Button.InputBindings>
                         </Button>
                     </DataTemplate>

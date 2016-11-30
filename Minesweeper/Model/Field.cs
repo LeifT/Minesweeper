@@ -6,12 +6,13 @@ namespace Minesweeper.Model {
         private bool _isMine;
         private bool _isFlagPlaced;
         private bool _isFlagMissPlaced;
+        private bool _isQuestionPlaced;
         private int _cues;
+
         public int X { get; set; }
         public int Y { get; set; }
 
-        public bool IsFlagPlaced
-        {
+        public bool IsFlagPlaced {
             get { return _isFlagPlaced; }
             set
             {
@@ -20,6 +21,21 @@ namespace Minesweeper.Model {
                 }
                 
                 _isFlagPlaced = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsQuestionPlaced
+        {
+            get { return _isQuestionPlaced; }
+            set
+            {
+                if (_isQuestionPlaced == value)
+                {
+                    return;
+                }
+
+                _isQuestionPlaced = value;
                 RaisePropertyChanged();
             }
         }

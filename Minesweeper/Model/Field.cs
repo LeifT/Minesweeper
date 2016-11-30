@@ -1,89 +1,17 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 
 namespace Minesweeper.Model {
     public class Field : ViewModelBase {
-        private bool _isRevealed;
-        private bool _isMine;
-        private bool _isFlagPlaced;
-        private bool _isFlagMissPlaced;
-        private bool _isQuestionPlaced;
-        private int _cues;
+        private States _state;
 
         public int X { get; set; }
         public int Y { get; set; }
 
-        public bool IsFlagPlaced {
-            get { return _isFlagPlaced; }
-            set
-            {
-                if (_isFlagPlaced == value) {
-                    return;
-                }
-                
-                _isFlagPlaced = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool IsQuestionPlaced
-        {
-            get { return _isQuestionPlaced; }
-            set
-            {
-                if (_isQuestionPlaced == value)
-                {
-                    return;
-                }
-
-                _isQuestionPlaced = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool IsFlagMissPlaced {
-            get { return _isFlagMissPlaced; }
+        public States State {
+            get { return _state; }
             set {
-                if (_isFlagMissPlaced == value) {
-                    return;
-                }
-
-                _isFlagMissPlaced = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int Cues {
-            get { return _cues; }
-            set {
-                if (_cues == value) {
-                    return;
-                }
-
-                _cues = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool IsMine {
-            get { return _isMine; }
-            set {
-                if (_isMine == value) {
-                    return;
-                }
-
-                _isMine = value; 
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool IsRevealed {
-            get { return _isRevealed; }
-            set {
-                if (_isRevealed == value) {
-                    return;
-                }
-
-                _isRevealed = value; 
+                _state = value;
                 RaisePropertyChanged();
             }
         }
@@ -91,11 +19,27 @@ namespace Minesweeper.Model {
         public void Set(int x, int y) {
             X = x;
             Y = y;
-            IsMine = false;
-            Cues = 0;
-            IsRevealed = false;
-            IsFlagMissPlaced = false;
-            IsFlagPlaced = false;
+            State = States.Default;
+        }
+
+        [Flags]
+        public enum States {
+            Blank     = 1 << 0,
+            One       = 1 << 1, 
+            Two       = 1 << 2,
+            Three     = 1 << 3, 
+            Four      = 1 << 4, 
+            Five      = 1 << 5,  
+            Six       = 1 << 6,
+            Seven     = 1 << 7,
+            Eight     = 1 << 8,
+            Default   = 1 << 9,
+            Flag      = 1 << 10,
+            WrongFlag = 1 << 11,
+            Unknown   = 1 << 12,
+            Mine      = 1 << 13,
+
+            Cues = One | Two | Three | Four | Five | Six | Seven | Eight,
         }
     }
 }

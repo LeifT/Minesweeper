@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:viewModel="clr-namespace:Minesweeper.ViewModel"
+        xmlns:model="clr-namespace:Minesweeper.Model"
         mc:Ignorable="d ignore"
         Height="360"
         MinHeight="360"
@@ -56,7 +57,7 @@
                 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="{Binding Width}" Rows="{Binding Height}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <UniformGrid Rows="{Binding Height}"  Columns="{Binding Width}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -68,39 +69,45 @@
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="Icons/field.png" />
                                             <Style.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                        <Condition Binding="{Binding IsMine}" Value="False" />
-                                                    </MultiDataTrigger.Conditions>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Blank}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
-                                                </MultiDataTrigger>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                        <Condition Binding="{Binding IsMine}" Value="True" />
-                                                    </MultiDataTrigger.Conditions>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.One}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Two}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Three}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Four}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Five}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Six}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Seven}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Eight}">
+                                                    <Setter Property="Source" Value="Icons/empty.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Mine}">
                                                     <Setter Property="Source" Value="Icons/mine.png" />
-                                                </MultiDataTrigger>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
-                                                    </MultiDataTrigger.Conditions>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Flag}">
                                                     <Setter Property="Source" Value="Icons/flag.png" />
-                                                </MultiDataTrigger>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsQuestionPlaced}" Value="True" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Source" Value="Icons/question.png" />
-                                                </MultiDataTrigger>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsFlagPlaced}" Value="True" />
-                                                        <Condition Binding="{Binding IsFlagMissPlaced}" Value="True" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Source" Value="Icons/miss.png" />
-                                                </MultiDataTrigger>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Unknown}">
+                                                    <Setter Property="Source" Value="Icons/unknown.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.WrongFlag}">
+                                                    <Setter Property="Source" Value="Icons/wrong_flag.png" />
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Image.Style>
@@ -109,41 +116,36 @@
                                     <Label.Style>
                                         <Style TargetType="Label">
                                             <Style.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding IsRevealed}" Value="True" />
-                                                        <Condition Binding="{Binding IsMine}" Value="False" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Content" Value="{Binding Cues}" />
-                                                </MultiDataTrigger>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding Cues}" Value="0" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Content" Value="" />
-                                                </MultiDataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="1">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.One}">
+                                                    <Setter  Property="Content" Value="1"/>
                                                     <Setter  Property="Foreground" Value="Blue"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="2">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Two}">
+                                                    <Setter  Property="Content" Value="2"/>
                                                     <Setter  Property="Foreground" Value="Green"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="3">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Three}">
+                                                    <Setter  Property="Content" Value="3"/>
                                                     <Setter  Property="Foreground" Value="Red"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="4">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Four}">
+                                                    <Setter  Property="Content" Value="4"/>
                                                     <Setter  Property="Foreground" Value="DarkBlue"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="5">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Five}">
+                                                    <Setter  Property="Content" Value="5"/>
                                                     <Setter  Property="Foreground" Value="Brown"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="6">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Six}">
+                                                    <Setter  Property="Content" Value="6"/>
                                                     <Setter  Property="Foreground" Value="Cyan"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="7">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Seven}">
+                                                    <Setter  Property="Content" Value="7"/>
                                                     <Setter  Property="Foreground" Value="Black"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Cues}" Value="8">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Eight}">
+                                                    <Setter  Property="Content" Value="8"/>
                                                     <Setter  Property="Foreground" Value="Gray"/>
                                                 </DataTrigger>
                                             </Style.Triggers>

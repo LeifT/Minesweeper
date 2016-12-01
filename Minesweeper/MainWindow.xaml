@@ -23,7 +23,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Game">
-                <MenuItem Header="New Game" Command="{Binding RestartCommand}" />
+                <MenuItem Header="New Game" Command="{Binding NewGameCommand}" />
                 <Separator /> 
                 <MenuItem Header="_Difficulties" ItemsSource="{Binding Difficulties}">
                     <ItemsControl.ItemTemplate>
@@ -38,6 +38,7 @@
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </MenuItem>
+                <MenuItem Header="HighScores" Click="OpenHighScoreWindow" />
                 <Separator />
                 <MenuItem Header="Exit" />
             </MenuItem>
@@ -61,7 +62,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0" VerticalAlignment="Center">
                     <TextBlock FontSize="16" Text="Time: "/>
-                    <TextBlock FontSize="16" Text="{Binding Time, Mode=OneWay}"/>
+                    <TextBlock FontSize="16" Text="{Binding SecondsFromGameStarted, Mode=OneWay}"/>
                 </StackPanel>
             </Grid>
             

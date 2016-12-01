@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Minesweeper.View;
 using Minesweeper.ViewModel;
 
 namespace Minesweeper
@@ -13,6 +14,13 @@ namespace Minesweeper
         public MainWindow() {
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();
+        }
+
+        private void OpenHighScoreWindow(object sender, RoutedEventArgs e) {
+            HighScoreView highScoreView = new HighScoreView();
+            highScoreView.Owner = Application.Current.MainWindow;
+            highScoreView.ShowInTaskbar = false;
+            highScoreView.ShowDialog();
         }
     }
 }

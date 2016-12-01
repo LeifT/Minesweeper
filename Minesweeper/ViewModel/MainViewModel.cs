@@ -9,28 +9,56 @@ using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
-        private GameBoard GameBoard { get; }
-        public CollectionView GameBoardView { get; }
-        public List<Difficulty> Difficulties { get; }
+        private readonly DispatcherTimer _dispatcherTimer;
         private Difficulty _currentDifficulty;
         private int _minesRemaining;
+        private int _secondsFromGameStarted;
 
-        public int Time {
-            get { return _time; }
-            private set {
-                _time = value; 
-                RaisePropertyChanged();
-            }
+        public MainViewModel() {
+            Difficulties = new List<Difficulty> {
+                new Difficulty("Beginner", 8, 8, 10),
+                new Difficulty("Intermediate", 16, 16, 40),
+                new Difficulty("Expert", 30, 16, 99)
+            };
+            
+            _currentDifficulty = Difficulties[0];
+            _minesRemaining = CurrentDifficulty.Mines;
+
+            GameBoard = new GameBoard(_currentDifficulty.Width, _currentDifficulty.Height, _currentDifficulty.Mines);
+            GameBoardView = new CollectionView(GameBoard.Fields);
+
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += DispatcherDispatcherTimerTick;
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+
+            GameBoard.GameOver += GameOver;
+            GameBoard.GameStart += GameStart;
         }
 
-        public ICommand RestartCommand => new RelayCommand(Restart);
+        public ICommand NewGameCommand => new RelayCommand(() => SetDifficultyAndRestart(CurrentDifficulty));
         public ICommand RevealCommand => new RelayCommand<Field>(GameBoard.Reveal);
         public ICommand PlaceFlagCommand => new RelayCommand<Field>(SetFlagOrUnknown);
         public ICommand MultiRevealCommand => new RelayCommand<Field>(GameBoard.MultiReveal);
         public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficultyAndRestart);
 
-        private DispatcherTimer dispatcherTimer;
-        private int _time;
+        ~MainViewModel() {
+            GameBoard.GameOver -= GameOver;
+            GameBoard.GameStart -= GameStart;
+        }
+
+        #region Properties
+
+        private GameBoard GameBoard { get; }
+        public CollectionView GameBoardView { get; }
+        public List<Difficulty> Difficulties { get; }
+
+        public int SecondsFromGameStarted {
+            get { return _secondsFromGameStarted; }
+            private set {
+                _secondsFromGameStarted = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public Difficulty CurrentDifficulty {
             get { return _currentDifficulty; }
@@ -43,42 +71,39 @@ namespace Minesweeper.ViewModel {
         public int MinesRemaining {
             get { return _minesRemaining; }
             private set {
+                if (_minesRemaining == value) {
+                    return;
+                }
+
                 _minesRemaining = value;
                 RaisePropertyChanged();
             }
         }
 
-        public MainViewModel() {
-            Difficulties = new List<Difficulty> {
-                new Difficulty("Beginner", 8, 8, 10),
-                new Difficulty("Intermediate", 16, 16, 40),
-                new Difficulty("Expert", 30, 16, 99)
-            };
+        #endregion
 
-            _currentDifficulty = Difficulties[0];
-            GameBoard = new GameBoard(_currentDifficulty.Width, _currentDifficulty.Height,_currentDifficulty.Mines);
-            GameBoardView = new CollectionView(GameBoard.Fields);
-            _minesRemaining = CurrentDifficulty.Mines;
+        #region Private Methods
 
-            dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += DispatcherDispatcherTimerTick;
-            dispatcherTimer.Interval = new TimeSpan(0,0,1);
-            dispatcherTimer.Start();
+        private void GameStart() {
+            _dispatcherTimer.Start();
+        }
+
+        private void GameOver(bool mineHit) {
+            _dispatcherTimer.Stop();
+
+            if (!mineHit) {
+                
+            }
         }
 
         private void DispatcherDispatcherTimerTick(object sender, EventArgs e) {
-            Time++;
-        }
-
-        private void Restart() {
-            MinesRemaining = CurrentDifficulty.Mines;
-            GameBoard.Restart();
+            SecondsFromGameStarted++;
         }
 
         private void SetFlagOrUnknown(Field field) {
             if (field.State == Field.States.Default) {
                 MinesRemaining--;
-            } else if(field.State == Field.States.Flag) {
+            } else if (field.State == Field.States.Flag) {
                 MinesRemaining++;
             }
 
@@ -86,10 +111,16 @@ namespace Minesweeper.ViewModel {
         }
 
         private void SetDifficultyAndRestart(Difficulty difficulty) {
+            _dispatcherTimer.Stop();
+
+            SecondsFromGameStarted = 0;
             CurrentDifficulty = difficulty;
             MinesRemaining = CurrentDifficulty.Mines;
+
             GameBoard.SetDifficultyAndRestart(CurrentDifficulty.Width, CurrentDifficulty.Height, CurrentDifficulty.Mines);
             GameBoardView.Refresh();
         }
+
+        #endregion
     }
 }

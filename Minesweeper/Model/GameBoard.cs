@@ -10,6 +10,12 @@ namespace Minesweeper.Model {
         private bool _isGameOver;
         private int _mineCount;
 
+        public delegate void GameOverHandler(bool mineHit);
+        public delegate void GameStartHandler();
+        public event GameOverHandler GameOver;
+        public event GameStartHandler GameStart;
+
+
         public GameBoard(int width, int height, int mines) {
             Fields = new List<Field>();
             _mines = new List<Field>();
@@ -57,12 +63,13 @@ namespace Minesweeper.Model {
             if (!_isFirstFieldRevealed) {
                 _isFirstFieldRevealed = true;
                 PlaceMines(field);
+                GameStart?.Invoke();
             }
 
             RevealFields(field);
-
-            if (_fieldsRevealed == Width*Height - _mineCount) {
-                // Victory
+            
+            if (_fieldsRevealed == Width * Height - _mineCount) {
+                GameOver?.Invoke(false);
             }
         }
         
@@ -83,6 +90,10 @@ namespace Minesweeper.Model {
                 }
 
                 RevealFields(neightbour);
+            }
+            
+            if (_fieldsRevealed == Width * Height - _mineCount) {
+                GameOver?.Invoke(false);
             }
         }
 
@@ -134,7 +145,7 @@ namespace Minesweeper.Model {
 
                 if (_mines.Contains(current)) {
                     field.State = Field.States.Mine;
-                    GameOver();
+                    MineHit();
                     return;
                 }
 
@@ -160,7 +171,7 @@ namespace Minesweeper.Model {
             }
         }
 
-        private void GameOver() {
+        private void MineHit() {
             _isGameOver = true;
 
             foreach (var field in Fields) {
@@ -174,6 +185,8 @@ namespace Minesweeper.Model {
                     field.State = Field.States.Mine;
                 }
             }
+
+            GameOver?.Invoke(true);
         }
 
         private List<Field> GetNeighbours(Field field) {

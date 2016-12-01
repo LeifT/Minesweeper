@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using GalaSoft.MvvmLight;
 using Minesweeper.Annotations;
 
 namespace Minesweeper.Model {
@@ -16,7 +15,6 @@ namespace Minesweeper.Model {
             set {
                 _state = value;
                 OnPropertyChanged(nameof(State));
-                //RaisePropertyChanged();
             }
         }
 

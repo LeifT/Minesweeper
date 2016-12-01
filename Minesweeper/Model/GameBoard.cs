@@ -26,7 +26,6 @@ namespace Minesweeper.Model {
         public List<Field> Fields { get; }
         public int Height { get; private set; }
         public int Width { get; private set; }
-        public int FlagsRemaining { get; private set; }
 
         #endregion
 
@@ -40,11 +39,9 @@ namespace Minesweeper.Model {
             switch (field.State) {
                 case Field.States.Default:
                     field.State = Field.States.Flag;
-                    FlagsRemaining--;
                     break;
                 case Field.States.Flag:
                     field.State = Field.States.Unknown;
-                    FlagsRemaining++;
                     break;
                 case Field.States.Unknown:
                     field.State = Field.States.Default;
@@ -101,7 +98,6 @@ namespace Minesweeper.Model {
             _isFirstFieldRevealed = false;
             _isGameOver = false;
             _fieldsRevealed = 0;
-            FlagsRemaining = _mineCount;
         }
 
         #endregion
@@ -214,13 +210,11 @@ namespace Minesweeper.Model {
             }
 
             fields.Remove(Fields.IndexOf(field));
-            var minesPlaced = 0;
 
-            while (minesPlaced < _mineCount) {
+            for (int i = 0; i < _mineCount; i++) {
                 var mineField = fields[random.Next(fields.Count)];
                 _mines.Add(Fields[mineField]);
                 fields.Remove(mineField);
-                minesPlaced++;
             }
         }
 

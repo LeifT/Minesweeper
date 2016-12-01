@@ -44,14 +44,14 @@
         </Menu>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
+                <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!--<StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock FontSize="16" Text="Flags Remaining: "/>
-                <TextBlock FontSize="16" Text="{Binding GameBoard.FlagsRemaining, Mode=OneWay}"/>
-            </StackPanel>-->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock FontSize="16" Text="Mines: "/>
+                <TextBlock FontSize="16" Text="{Binding MinesRemaining, Mode=OneWay}"/>
+            </StackPanel>
 
             <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoardView, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>

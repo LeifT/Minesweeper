@@ -11,17 +11,25 @@ namespace Minesweeper.ViewModel {
         public CollectionView GameBoardView { get; }
         public List<Difficulty> Difficulties { get; }
         private Difficulty _currentDifficulty;
-
-        public ICommand RestartCommand => new RelayCommand(GameBoard.Restart);
+        private int _minesRemaining;
+        public ICommand RestartCommand => new RelayCommand(Restart);
         public ICommand RevealCommand => new RelayCommand<Field>(GameBoard.Reveal);
-        public ICommand PlaceFlagCommand => new RelayCommand<Field>(GameBoard.SetFlagOrUnknown);
+        public ICommand PlaceFlagCommand => new RelayCommand<Field>(SetFlagOrUnknown);
         public ICommand MultiRevealCommand => new RelayCommand<Field>(GameBoard.MultiReveal);
         public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficultyAndRestart);
 
         public Difficulty CurrentDifficulty {
             get { return _currentDifficulty; }
-            set {
+            private set {
                 _currentDifficulty = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public int MinesRemaining {
+            get { return _minesRemaining; }
+            private set {
+                _minesRemaining = value;
                 RaisePropertyChanged();
             }
         }
@@ -36,10 +44,27 @@ namespace Minesweeper.ViewModel {
             _currentDifficulty = Difficulties[0];
             GameBoard = new GameBoard(_currentDifficulty.Width, _currentDifficulty.Height,_currentDifficulty.Mines);
             GameBoardView = new CollectionView(GameBoard.Fields);
+            _minesRemaining = CurrentDifficulty.Mines;
+        }
+
+        private void Restart() {
+            MinesRemaining = CurrentDifficulty.Mines;
+            GameBoard.Restart();
+        }
+
+        private void SetFlagOrUnknown(Field field) {
+            if (field.State == Field.States.Default) {
+                MinesRemaining--;
+            } else if(field.State == Field.States.Flag) {
+                MinesRemaining++;
+            }
+
+            GameBoard.SetFlagOrUnknown(field);
         }
 
         private void SetDifficultyAndRestart(Difficulty difficulty) {
             CurrentDifficulty = difficulty;
+            MinesRemaining = CurrentDifficulty.Mines;
             GameBoard.SetDifficultyAndRestart(CurrentDifficulty.Width, CurrentDifficulty.Height, CurrentDifficulty.Mines);
             GameBoardView.Refresh();
         }

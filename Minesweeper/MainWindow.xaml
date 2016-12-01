@@ -47,11 +47,24 @@
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+                
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock FontSize="16" Text="Mines: "/>
-                <TextBlock FontSize="16" Text="{Binding MinesRemaining, Mode=OneWay}"/>
-            </StackPanel>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5,0" VerticalAlignment="Center">
+                    <TextBlock FontSize="16" Text="Mines: "/>
+                    <TextBlock FontSize="16" Text="{Binding MinesRemaining, Mode=OneWay}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0" VerticalAlignment="Center">
+                    <TextBlock FontSize="16" Text="Time: "/>
+                    <TextBlock FontSize="16" Text="{Binding Time, Mode=OneWay}"/>
+                </StackPanel>
+            </Grid>
+            
 
             <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoardView, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>

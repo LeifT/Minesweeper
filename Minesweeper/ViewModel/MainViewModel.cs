@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Minesweeper.Model;
@@ -12,11 +14,23 @@ namespace Minesweeper.ViewModel {
         public List<Difficulty> Difficulties { get; }
         private Difficulty _currentDifficulty;
         private int _minesRemaining;
+
+        public int Time {
+            get { return _time; }
+            private set {
+                _time = value; 
+                RaisePropertyChanged();
+            }
+        }
+
         public ICommand RestartCommand => new RelayCommand(Restart);
         public ICommand RevealCommand => new RelayCommand<Field>(GameBoard.Reveal);
         public ICommand PlaceFlagCommand => new RelayCommand<Field>(SetFlagOrUnknown);
         public ICommand MultiRevealCommand => new RelayCommand<Field>(GameBoard.MultiReveal);
         public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficultyAndRestart);
+
+        private DispatcherTimer dispatcherTimer;
+        private int _time;
 
         public Difficulty CurrentDifficulty {
             get { return _currentDifficulty; }
@@ -45,6 +59,15 @@ namespace Minesweeper.ViewModel {
             GameBoard = new GameBoard(_currentDifficulty.Width, _currentDifficulty.Height,_currentDifficulty.Mines);
             GameBoardView = new CollectionView(GameBoard.Fields);
             _minesRemaining = CurrentDifficulty.Mines;
+
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += DispatcherDispatcherTimerTick;
+            dispatcherTimer.Interval = new TimeSpan(0,0,1);
+            dispatcherTimer.Start();
+        }
+
+        private void DispatcherDispatcherTimerTick(object sender, EventArgs e) {
+            Time++;
         }
 
         private void Restart() {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Data;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -8,11 +7,10 @@ using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
-        private int _width;
-        private int _height;
         private GameBoard GameBoard { get; }
-        public CollectionView ViewBoard { get; }
+        public CollectionView GameBoardView { get; }
         public List<Difficulty> Difficulties { get; }
+        private Difficulty _currentDifficulty;
 
         public ICommand RestartCommand => new RelayCommand(GameBoard.Restart);
         public ICommand RevealCommand => new RelayCommand<Field>(GameBoard.Reveal);
@@ -20,18 +18,10 @@ namespace Minesweeper.ViewModel {
         public ICommand MultiRevealCommand => new RelayCommand<Field>(GameBoard.MultiReveal);
         public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficultyAndRestart);
 
-        public int Width {
-            get { return _width; }
+        public Difficulty CurrentDifficulty {
+            get { return _currentDifficulty; }
             set {
-                _width = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int Height {
-            get { return _height; }
-            set {
-                _height = value;
+                _currentDifficulty = value;
                 RaisePropertyChanged();
             }
         }
@@ -43,16 +33,15 @@ namespace Minesweeper.ViewModel {
                 new Difficulty("Expert", 30, 16, 99)
             };
 
-            GameBoard = new GameBoard();
-            ViewBoard = new CollectionView(GameBoard.Fields);
+            _currentDifficulty = Difficulties[0];
+            GameBoard = new GameBoard(_currentDifficulty.Width, _currentDifficulty.Height,_currentDifficulty.Mines);
+            GameBoardView = new CollectionView(GameBoard.Fields);
         }
 
-        private void SetDifficultyAndRestart(Difficulty diff) {
-            Width = diff.Width;
-            Height = diff.Height;
-
-            GameBoard.SetDifficultyAndRestart(Width, Height, diff.Mines);
-            ViewBoard.Refresh();
+        private void SetDifficultyAndRestart(Difficulty difficulty) {
+            CurrentDifficulty = difficulty;
+            GameBoard.SetDifficultyAndRestart(CurrentDifficulty.Width, CurrentDifficulty.Height, CurrentDifficulty.Mines);
+            GameBoardView.Refresh();
         }
     }
 }

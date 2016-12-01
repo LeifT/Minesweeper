@@ -10,19 +10,15 @@ namespace Minesweeper.Model {
         private bool _isGameOver;
         private int _mineCount;
 
-        public GameBoard() {
+        public GameBoard(int width, int height, int mines) {
             Fields = new List<Field>();
             _mines = new List<Field>();
 
-            Width = 8;
-            Height = 8;
-            _mineCount = 10;
+            Width = width;
+            Height = height;
+            _mineCount = mines;
 
-            InitalizeFields();
-            _isFirstFieldRevealed = false;
-            _isGameOver = false;
-            _fieldsRevealed = 0;
-            FlagsRemaining = _mineCount;
+            Restart();
         }
 
         #region Properties

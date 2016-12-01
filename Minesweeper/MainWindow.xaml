@@ -53,11 +53,10 @@
                 <TextBlock FontSize="16" Text="{Binding GameBoard.FlagsRemaining, Mode=OneWay}"/>
             </StackPanel>-->
 
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding ViewBoard, Mode=OneWay}">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoardView, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="{Binding Height, Mode=OneWay}" Columns="{Binding Width, Mode=OneWay}"
-                                     HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <UniformGrid Rows="{Binding CurrentDifficulty.Height, Mode=OneWay}" Columns="{Binding CurrentDifficulty.Width, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

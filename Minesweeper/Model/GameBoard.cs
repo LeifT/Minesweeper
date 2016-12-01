@@ -1,79 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GalaSoft.MvvmLight;
 
 namespace Minesweeper.Model {
-    public class GameBoard : ViewModelBase {
-        public enum Difficulty {
-            Beginner,
-            Intermediate,
-            Expert
-        }
-
+    public class GameBoard {
         private readonly List<Field> _mines;
         private int _fieldsRevealed;
-        private int _flagsRemaining;
-        private int _height;
         private bool _isFirstFieldRevealed;
         private bool _isGameOver;
         private int _mineCount;
-        private int _width;
 
         public GameBoard() {
             Fields = new List<Field>();
             _mines = new List<Field>();
 
-            _width = 8;
-            _height = 8;
+            Width = 8;
+            Height = 8;
             _mineCount = 10;
 
             InitalizeFields();
             _isFirstFieldRevealed = false;
             _isGameOver = false;
             _fieldsRevealed = 0;
-            _flagsRemaining = _mineCount;
+            FlagsRemaining = _mineCount;
         }
 
         #region Properties
 
         public List<Field> Fields { get; }
-
-        public int Height {
-            get { return _height; }
-            private set {
-                if (_height == value) {
-                    return;
-                }
-
-                _height = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int Width {
-            get { return _width; }
-            private set {
-                if (_width == value) {
-                    return;
-                }
-
-                _width = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int FlagsRemaining {
-            get { return _flagsRemaining; }
-            private set {
-                if (_flagsRemaining == value) {
-                    return;
-                }
-
-                _flagsRemaining = value;
-                RaisePropertyChanged();
-            }
-        }
+        public int Height { get; private set; }
+        public int Width { get; private set; }
+        public int FlagsRemaining { get; private set; }
 
         #endregion
 
@@ -111,7 +68,7 @@ namespace Minesweeper.Model {
 
             RevealFields(field);
 
-            if (_fieldsRevealed == _width*_height - _mineCount) {
+            if (_fieldsRevealed == Width*Height - _mineCount) {
                 // Victory
             }
         }
@@ -136,24 +93,10 @@ namespace Minesweeper.Model {
             }
         }
 
-        public void SetDifficultyAndRestart(Difficulty difficulty) {
-            switch (difficulty) {
-                case Difficulty.Beginner:
-                    Width = 8;
-                    Height = 8;
-                    _mineCount = 10;
-                    break;
-                case Difficulty.Intermediate:
-                    Width = 16;
-                    Height = 16;
-                    _mineCount = 40;
-                    break;
-                case Difficulty.Expert:
-                    Width = 30;
-                    Height = 16;
-                    _mineCount = 99;
-                    break;
-            }
+        public void SetDifficultyAndRestart(int columns, int rows, int mines) {
+            Width = columns;
+            Height = rows;
+            _mineCount = mines;
             Restart();
         }
 
@@ -170,20 +113,20 @@ namespace Minesweeper.Model {
         #region Private Methods
 
         private void InitalizeFields() {
-            if (Fields.Count < _width*_height) {
-                for (var i = Fields.Count; i < _width*_height; i++) {
+            if (Fields.Count < Width*Height) {
+                for (var i = Fields.Count; i < Width*Height; i++) {
                     Fields.Add(new Field());
                 }
             }
 
-            if (Fields.Count > _width*_height) {
-                for (var i = Fields.Count - 1; i >= _width*_height; i--) {
+            if (Fields.Count > Width*Height) {
+                for (var i = Fields.Count - 1; i >= Width*Height; i--) {
                     Fields.RemoveAt(i);
                 }
             }
 
-            for (var i = 0; i < _width*_height; i++) {
-                Fields[i].Set(i%_width, i/_width);
+            for (var i = 0; i < Width*Height; i++) {
+                Fields[i].Set(i%Width, i/Width);
             }
         }
 
@@ -250,15 +193,15 @@ namespace Minesweeper.Model {
                         continue;
                     }
 
-                    if ((field.X + i < 0) || (field.X + i >= _width)) {
+                    if ((field.X + i < 0) || (field.X + i >= Width)) {
                         continue;
                     }
 
-                    if ((field.Y + j < 0) || (field.Y + j >= _height)) {
+                    if ((field.Y + j < 0) || (field.Y + j >= Height)) {
                         continue;
                     }
 
-                    neightoubrs.Add(Fields[field.X + i + (field.Y + j)*_width]);
+                    neightoubrs.Add(Fields[field.X + i + (field.Y + j)*Width]);
                 }
             }
             return neightoubrs;

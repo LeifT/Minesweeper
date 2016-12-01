@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:model="clr-namespace:Minesweeper.Model"
+        xmlns:viewModel="clr-namespace:Minesweeper.ViewModel"
         mc:Ignorable="d ignore"
         Height="360"
         MinHeight="360"
@@ -26,9 +27,9 @@
             <MenuItem Header="_Game">
                 <MenuItem Header="New Game" Command="{Binding RestartCommand}" />
                 <Separator />
-                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static model:GameBoard+Difficulty.Beginner}" Click="Beginner" />
-                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static model:GameBoard+Difficulty.Intermediate}" Click="Intermediate" />
-                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static model:GameBoard+Difficulty.Expert}" Click="Expert" />
+                <MenuItem Header="Beginner" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Beginner}" Click="Beginner" />
+                <MenuItem Header="Intermediate" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Intermediate}" Click="Intermediate" />
+                <MenuItem Header="Expert" Command="{Binding SetDifficultyCommand }" CommandParameter="{x:Static viewModel:MainViewModel+Difficulty.Expert}" Click="Expert" />
                 <Separator />
                 <MenuItem Header="Exit" />
             </MenuItem>
@@ -39,19 +40,19 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             
-            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <!--<StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock FontSize="16" Text="Flags Remaining: "/>
                 <TextBlock FontSize="16" Text="{Binding GameBoard.FlagsRemaining, Mode=OneWay}"/>
-            </StackPanel>
+            </StackPanel>-->
             
             <ItemsControl Grid.Row="1" ItemsSource="{Binding ViewBoard, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="{Binding GameBoard.Height, Mode=OneWay}"  Columns="{Binding GameBoard.Width, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <UniformGrid Rows="{Binding Height, Mode=OneWay}"  Columns="{Binding Width, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="model:Field">
                         <Button Width="32" Height="32" Padding="0" BorderThickness="0" Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}">
                             <Grid>
                                 <Image SnapsToDevicePixels="True">
@@ -59,7 +60,7 @@
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="Icons/field.png" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Blank}">
+                                                <DataTrigger Binding="{Binding Path=State}" Value="{x:Static model:Field+States.Blank}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.One}">

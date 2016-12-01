@@ -41,13 +41,13 @@
             
             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock FontSize="16" Text="Flags Remaining: "/>
-                <TextBlock FontSize="16" Text="{Binding GameBoard.FlagsRemaining}"/>
+                <TextBlock FontSize="16" Text="{Binding GameBoard.FlagsRemaining, Mode=OneWay}"/>
             </StackPanel>
             
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoard.Fields}">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding ViewBoard, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="{Binding GameBoard.Height}"  Columns="{Binding GameBoard.Width}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <UniformGrid Rows="{Binding GameBoard.Height, Mode=OneWay}"  Columns="{Binding GameBoard.Width, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

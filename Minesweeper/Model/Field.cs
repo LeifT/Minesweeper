@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight;
+using Minesweeper.Annotations;
 
 namespace Minesweeper.Model {
-    public class Field : ViewModelBase {
+    public class Field : INotifyPropertyChanged {
         private States _state;
 
         public int X { get; set; }
@@ -12,7 +15,8 @@ namespace Minesweeper.Model {
             get { return _state; }
             set {
                 _state = value;
-                RaisePropertyChanged();
+                OnPropertyChanged(nameof(State));
+                //RaisePropertyChanged();
             }
         }
 
@@ -40,6 +44,13 @@ namespace Minesweeper.Model {
             Mine      = 1 << 13,
 
             Cues = One | Two | Three | Four | Five | Six | Seven | Eight,
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using GalaSoft.MvvmLight;
 
@@ -13,7 +12,6 @@ namespace Minesweeper.Model {
         }
 
         private readonly List<Field> _mines;
-        private ObservableCollection<Field> _fields;
         private int _fieldsRevealed;
         private int _flagsRemaining;
         private int _height;
@@ -23,7 +21,7 @@ namespace Minesweeper.Model {
         private int _width;
 
         public GameBoard() {
-            _fields = new ObservableCollection<Field>();
+            Fields = new List<Field>();
             _mines = new List<Field>();
 
             _width = 8;
@@ -37,9 +35,13 @@ namespace Minesweeper.Model {
             _flagsRemaining = _mineCount;
         }
 
+        #region Properties
+
+        public List<Field> Fields { get; }
+
         public int Height {
             get { return _height; }
-            set {
+            private set {
                 if (_height == value) {
                     return;
                 }
@@ -51,7 +53,7 @@ namespace Minesweeper.Model {
 
         public int Width {
             get { return _width; }
-            set {
+            private set {
                 if (_width == value) {
                     return;
                 }
@@ -63,7 +65,7 @@ namespace Minesweeper.Model {
 
         public int FlagsRemaining {
             get { return _flagsRemaining; }
-            set {
+            private set {
                 if (_flagsRemaining == value) {
                     return;
                 }
@@ -73,82 +75,11 @@ namespace Minesweeper.Model {
             }
         }
 
-        public ObservableCollection<Field> Fields {
-            get { return _fields; }
-            set {
-                _fields = value;
-                RaisePropertyChanged();
-            }
-        }
+        #endregion
 
-        public void MultiReveal(Field field) {
-            if (!Field.States.Cues.HasFlag(field.State)) {
-                return;
-            }
+        #region Public Methods
 
-            var neightboursWithFlag = GetNeighbours(field).Count(neightbour => neightbour.State == Field.States.Flag);
-
-            if (1 << neightboursWithFlag < (int) field.State) {
-                return;
-            }
-
-            foreach (var neightbour in GetNeighbours(field)) {
-                if (neightbour.State != Field.States.Default) {
-                    continue;
-                }
-
-                RevealFields(neightbour);
-            }
-        }
-
-        public void SetDifficulty(Difficulty difficulty) {
-            switch (difficulty) {
-                case Difficulty.Beginner:
-                    Width = 8;
-                    Height = 8;
-                    _mineCount = 10;
-                    break;
-                case Difficulty.Intermediate:
-                    Width = 16;
-                    Height = 16;
-                    _mineCount = 40;
-                    break;
-                case Difficulty.Expert:
-                    Width = 30;
-                    Height = 16;
-                    _mineCount = 99;
-                    break;
-            }
-            Restart();
-        }
-
-        public void Restart() {
-            InitalizeFields();
-            _isFirstFieldRevealed = false;
-            _isGameOver = false;
-            _fieldsRevealed = 0;
-            FlagsRemaining = _mineCount;
-        }
-
-        private void InitalizeFields() {
-            if (_fields.Count < _width*_height) {
-                for (var i = _fields.Count; i < _width*_height; i++) {
-                    _fields.Add(new Field());
-                }
-            }
-
-            if (_fields.Count > _width*_height) {
-                for (var i = _fields.Count - 1; i >= _width*_height; i--) {
-                    _fields.RemoveAt(i);
-                }
-            }
-
-            for (var i = 0; i < _width*_height; i++) {
-                _fields[i].Set(i%_width, i/_width);
-            }
-        }
-
-        public void PlaceFlag(Field field) {
+        public void SetFlagOrUnknown(Field field) {
             if (_isGameOver) {
                 return;
             }
@@ -178,16 +109,81 @@ namespace Minesweeper.Model {
                 PlaceMines(field);
             }
 
-            if (_mines.Contains(field)) {
-                field.State = Field.States.Mine;
-                GameOver();
-                return;
-            }
-
             RevealFields(field);
 
             if (_fieldsRevealed == _width*_height - _mineCount) {
                 // Victory
+            }
+        }
+        
+        public void MultiReveal(Field field) {
+            if (!Field.States.Cues.HasFlag(field.State)) {
+                return;
+            }
+
+            var neighboursWithFlag = GetNeighbours(field).Count(neighbour => neighbour.State == Field.States.Flag);
+
+            if (1 << neighboursWithFlag < (int) field.State) {
+                return;
+            }
+
+            foreach (var neightbour in GetNeighbours(field)) {
+                if (neightbour.State != Field.States.Default) {
+                    continue;
+                }
+
+                RevealFields(neightbour);
+            }
+        }
+
+        public void SetDifficultyAndRestart(Difficulty difficulty) {
+            switch (difficulty) {
+                case Difficulty.Beginner:
+                    Width = 8;
+                    Height = 8;
+                    _mineCount = 10;
+                    break;
+                case Difficulty.Intermediate:
+                    Width = 16;
+                    Height = 16;
+                    _mineCount = 40;
+                    break;
+                case Difficulty.Expert:
+                    Width = 30;
+                    Height = 16;
+                    _mineCount = 99;
+                    break;
+            }
+            Restart();
+        }
+
+        public void Restart() {
+            InitalizeFields();
+            _isFirstFieldRevealed = false;
+            _isGameOver = false;
+            _fieldsRevealed = 0;
+            FlagsRemaining = _mineCount;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void InitalizeFields() {
+            if (Fields.Count < _width*_height) {
+                for (var i = Fields.Count; i < _width*_height; i++) {
+                    Fields.Add(new Field());
+                }
+            }
+
+            if (Fields.Count > _width*_height) {
+                for (var i = Fields.Count - 1; i >= _width*_height; i--) {
+                    Fields.RemoveAt(i);
+                }
+            }
+
+            for (var i = 0; i < _width*_height; i++) {
+                Fields[i].Set(i%_width, i/_width);
             }
         }
 
@@ -200,6 +196,12 @@ namespace Minesweeper.Model {
 
             while (queue.Count > 0) {
                 var current = queue.Dequeue();
+
+                if (_mines.Contains(current)) {
+                    field.State = Field.States.Mine;
+                    GameOver();
+                    return;
+                }
 
                 if (current.State != Field.States.Flag) {
                     var neighbouringMines = GetNeighbours(current).Count(neighbour => _mines.Contains(neighbour));
@@ -226,7 +228,7 @@ namespace Minesweeper.Model {
         private void GameOver() {
             _isGameOver = true;
 
-            foreach (var field in _fields) {
+            foreach (var field in Fields) {
                 if ((field.State == Field.States.Flag) && !_mines.Contains(field)) {
                     field.State = Field.States.WrongFlag;
                 }
@@ -256,7 +258,7 @@ namespace Minesweeper.Model {
                         continue;
                     }
 
-                    neightoubrs.Add(_fields[field.X + i + (field.Y + j)*_width]);
+                    neightoubrs.Add(Fields[field.X + i + (field.Y + j)*_width]);
                 }
             }
             return neightoubrs;
@@ -268,19 +270,21 @@ namespace Minesweeper.Model {
 
             _mines.Clear();
 
-            for (var i = 0; i < _fields.Count; i++) {
+            for (var i = 0; i < Fields.Count; i++) {
                 fields.Add(i);
             }
 
-            fields.Remove(_fields.IndexOf(field));
+            fields.Remove(Fields.IndexOf(field));
             var minesPlaced = 0;
 
             while (minesPlaced < _mineCount) {
                 var mineField = fields[random.Next(fields.Count)];
+                _mines.Add(Fields[mineField]);
                 fields.Remove(mineField);
-                _mines.Add(_fields[mineField]);
                 minesPlaced++;
             }
         }
+
+        #endregion
     }
 }

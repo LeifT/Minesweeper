@@ -16,7 +16,7 @@ using Microsoft.Practices.ServiceLocation;
 namespace Minesweeper.ViewModel
 {
     /// <summary>
-    /// This class contains static references to all the view models in the
+    /// This class contains static references to all the ViewBoard models in the
     /// application and provides an entry point for the bindings.
     /// <para>
     /// See http://www.mvvmlight.net

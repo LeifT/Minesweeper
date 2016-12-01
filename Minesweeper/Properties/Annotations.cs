@@ -714,7 +714,7 @@ namespace Minesweeper.Annotations
 
   /// <summary>
   /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC
-  /// partial view. If applied to a method, the MVC partial view name is calculated implicitly
+  /// partial ViewBoard. If applied to a method, the MVC partial ViewBoard name is calculated implicitly
   /// from the context. Use this attribute for custom wrappers similar to
   /// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>.
   /// </summary>
@@ -753,7 +753,7 @@ namespace Minesweeper.Annotations
 
   /// <summary>
   /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-  /// is an MVC view component. If applied to a method, the MVC view name is calculated implicitly
+  /// is an MVC ViewBoard component. If applied to a method, the MVC ViewBoard name is calculated implicitly
   /// from the context. Use this attribute for custom wrappers similar to
   /// <c>System.Web.Mvc.Controller.View(Object)</c>.
   /// </summary>
@@ -762,14 +762,14 @@ namespace Minesweeper.Annotations
 
   /// <summary>
   /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-  /// is an MVC view component name.
+  /// is an MVC ViewBoard component name.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter)]
   public sealed class AspMvcViewComponentAttribute : Attribute { }
 
   /// <summary>
   /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-  /// is an MVC view component view. If applied to a method, the MVC view component view name is default.
+  /// is an MVC ViewBoard component ViewBoard. If applied to a method, the MVC ViewBoard component ViewBoard name is default.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
   public sealed class AspMvcViewComponentViewAttribute : Attribute { }

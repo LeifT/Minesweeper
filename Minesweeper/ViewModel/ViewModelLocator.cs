@@ -9,7 +9,7 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
-using GalaSoft.MvvmLight;
+
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
@@ -27,7 +27,7 @@ namespace Minesweeper.ViewModel
         static ViewModelLocator() {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<HighScoreViewModel>();
+            SimpleIoc.Default.Register<Model.HighScoreViewModel>();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Minesweeper.ViewModel
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This non-static member is needed for data binding purposes.")]
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
-        public HighScoreViewModel HighScore => ServiceLocator.Current.GetInstance<HighScoreViewModel>();
+        public Model.HighScoreViewModel HighScore => ServiceLocator.Current.GetInstance<Model.HighScoreViewModel>();
 
         /// <summary>
         /// Cleans up all the resources.

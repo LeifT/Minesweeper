@@ -43,24 +43,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
-        <!--<UniformGrid Columns="2">
-            <Label Content="Beginner"/>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Source={x:Static properties:Highscores.Default}, Path=Beginner}"/>
-                <Label Content="seconds"/>
-            </StackPanel>
-            
-            <Label Content="Intermediate"/>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Source={x:Static properties:Highscores.Default}, Path=Intermediate}"/>
-                <Label Content="seconds"/>
-            </StackPanel>
-            <Label Content="Expert"/>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Source={x:Static properties:Highscores.Default}, Path=Expert}"/>
-                <Label Content="seconds"/>
-            </StackPanel>
-        </UniformGrid>-->
     </DockPanel>
 </Window>

@@ -17,9 +17,11 @@ namespace Minesweeper
         }
 
         private void OpenHighScoreWindow(object sender, RoutedEventArgs e) {
-            HighScoreView highScoreView = new HighScoreView();
-            highScoreView.Owner = Application.Current.MainWindow;
-            highScoreView.ShowInTaskbar = false;
+            var highScoreView = new HighScoreView {
+                Owner = Application.Current.MainWindow,
+                ShowInTaskbar = false
+            };
+
             highScoreView.ShowDialog();
         }
     }

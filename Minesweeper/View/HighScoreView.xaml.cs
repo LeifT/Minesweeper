@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Configuration;
+using System.Windows;
+using Minesweeper.Properties;
 
 namespace Minesweeper.View
 {

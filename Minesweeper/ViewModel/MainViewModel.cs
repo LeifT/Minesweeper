@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Minesweeper.Model;
+using Minesweeper.Properties;
 
 namespace Minesweeper.ViewModel {
     public class MainViewModel : ViewModelBase {
@@ -92,7 +93,12 @@ namespace Minesweeper.ViewModel {
             _dispatcherTimer.Stop();
 
             if (!mineHit) {
-                
+                var currentHighscore = (int) Highscores.Default[CurrentDifficulty.Name];
+
+                if (SecondsFromGameStarted < currentHighscore || currentHighscore == 0) {
+                    Highscores.Default[CurrentDifficulty.Name] = SecondsFromGameStarted;
+                    Highscores.Default.Save();
+                }
             }
         }
 

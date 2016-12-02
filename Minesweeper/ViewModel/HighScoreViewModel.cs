@@ -4,19 +4,20 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Minesweeper.Properties;
+using Minesweeper.Model;
 
 namespace Minesweeper.ViewModel{
 
     public class HighScoreViewModel : ViewModelBase {
         
-        public ObservableCollection<Model.HighScoreViewModel.HighScore> HighScores { get; }
+        public ObservableCollection<HighScore> HighScores { get; }
 
         public HighScoreViewModel() {
-            HighScores = new ObservableCollection<Model.HighScoreViewModel.HighScore>();
+            HighScores = new ObservableCollection<HighScore>();
 
             foreach (SettingsProperty sp in Highscores.Default.Properties) {
                 var name = sp.Name;
-                HighScores.Add(new Model.HighScoreViewModel.HighScore(name));
+                HighScores.Add(new HighScore(name));
             }
         }
 

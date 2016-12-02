@@ -87,6 +87,7 @@
     <Compile Include="Model\GameBoard.cs" />
     <Compile Include="Model\Field.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Model\HighScore.cs" />
     <Compile Include="ViewModel\HighScoreViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

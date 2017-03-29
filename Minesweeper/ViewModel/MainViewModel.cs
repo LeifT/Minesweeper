@@ -40,9 +40,8 @@ namespace Minesweeper.ViewModel {
         }
 
         public ICommand NewGameCommand => new RelayCommand(() => SetDifficultyAndRestart(CurrentDifficulty));
-        public ICommand RevealCommand => new RelayCommand<Field>(GameBoard.Reveal);
-        public ICommand PlaceFlagCommand => new RelayCommand<Field>(MarkField);
-        public ICommand MultiRevealCommand => new RelayCommand<Field>(GameBoard.MultiReveal);
+        public ICommand LeftClickCommand => new RelayCommand<Field>(GameBoard.InteractField);
+        public ICommand RightClickCommand => new RelayCommand<Field>(MarkField);
         public ICommand SetDifficultyCommand => new RelayCommand<Difficulty>(SetDifficultyAndRestart);
 
         ~MainViewModel() {

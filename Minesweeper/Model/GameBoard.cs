@@ -4,16 +4,20 @@ using System.Linq;
 
 namespace Minesweeper.Model {
     public class GameBoard {
+        public delegate void GameOverHandler(GameOverResult gameOverResult);
+
+        public delegate void GameStartHandler();
+
+        public enum GameOverResult {
+            Lost,
+            Won
+        }
+
         private readonly List<Field> _mines;
         private int _fieldsRevealed;
         private bool _isFirstFieldRevealed;
         private int _mineCount;
 
-        public delegate void GameOverHandler(GameOverResult gameOverResult);
-        public delegate void GameStartHandler();
-        public event GameOverHandler GameOver;
-        public event GameStartHandler GameStart;
-        
         public GameBoard(Difficulty difficulty) {
             Fields = new List<Field>();
             _mines = new List<Field>();
@@ -24,6 +28,9 @@ namespace Minesweeper.Model {
 
             Restart();
         }
+
+        public event GameOverHandler GameOver;
+        public event GameStartHandler GameStart;
 
         #region Properties
 
@@ -49,44 +56,14 @@ namespace Minesweeper.Model {
             }
         }
 
-        public void Reveal(Field field) {
-            if (field.State != Field.States.Unopened) {
-                return;
+        public void InteractField(Field field) {
+            if (field.State == Field.States.Unopened) {
+                InteractFieldUnopened(field);
+            } else if (!Field.States.AllDigits.HasFlag(field.State)) {
+                InteractFieldDigit(field);
             }
 
-            if (!_isFirstFieldRevealed) {
-                _isFirstFieldRevealed = true;
-                PlaceMines(field);
-                GameStart?.Invoke();
-            }
-
-            RevealFields(field);
-            
-            if (_fieldsRevealed == Width * Height - _mineCount) {
-                GameOver?.Invoke(GameOverResult.Won);
-            }
-        }
-        
-        public void MultiReveal(Field field) {
-            if (!Field.States.AllDigits.HasFlag(field.State)) {
-                return;
-            }
-
-            var neighboursWithFlag = GetNeighbours(field).Count(neighbour => neighbour.State == Field.States.FlagMark);
-
-            if (1 << neighboursWithFlag < (int) field.State) {
-                return;
-            }
-
-            foreach (var neightbour in GetNeighbours(field)) {
-                if (neightbour.State != Field.States.Unopened) {
-                    continue;
-                }
-
-                RevealFields(neightbour);
-            }
-            
-            if (_fieldsRevealed == Width * Height - _mineCount) {
+            if (_fieldsRevealed == Width*Height - _mineCount) {
                 GameOver?.Invoke(GameOverResult.Won);
             }
         }
@@ -108,6 +85,30 @@ namespace Minesweeper.Model {
 
         #region Private Methods
 
+        private void InteractFieldUnopened(Field field) {
+            if (!_isFirstFieldRevealed) {
+                _isFirstFieldRevealed = true;
+                PlaceMines(field);
+                GameStart?.Invoke();
+            }
+            OpenField(field);
+        }
+
+        private void InteractFieldDigit(Field field) {
+            var neighboursWithFlag = GetNeighbours(field).Count(neighbour => neighbour.State == Field.States.FlagMark);
+
+            if (1 << neighboursWithFlag < (int) field.State) {
+                return;
+            }
+
+            foreach (var neightbour in GetNeighbours(field)) {
+                if (neightbour.State != Field.States.Unopened) {
+                    continue;
+                }
+                OpenField(neightbour);
+            }
+        }
+
         private void InitalizeFields() {
             var fieldCount = Width*Height;
 
@@ -118,11 +119,11 @@ namespace Minesweeper.Model {
             Fields.RemoveRange(fieldCount, Fields.Count - fieldCount);
 
             for (var i = 0; i < fieldCount; i++) {
-                Fields[i].Set(i % Width, i / Width, Field.States.Unopened);
+                Fields[i].Set(i%Width, i/Width, Field.States.Unopened);
             }
         }
 
-        private void RevealFields(Field field) {
+        private void OpenField(Field field) {
             if (_mines.Contains(field)) {
                 field.State = Field.States.Mine;
                 MineHit();
@@ -138,7 +139,7 @@ namespace Minesweeper.Model {
             while (queue.Count > 0) {
                 var current = queue.Dequeue();
 
-                if (current.State != Field.States.FlagMark && current.State != Field.States.QuestionMark) {
+                if ((current.State != Field.States.FlagMark) && (current.State != Field.States.QuestionMark)) {
                     var neighbouringMinesCount = GetNeighbours(current).Count(neighbour => _mines.Contains(neighbour));
                     current.State = (Field.States) (1 << neighbouringMinesCount);
                     _fieldsRevealed++;
@@ -211,7 +212,7 @@ namespace Minesweeper.Model {
 
             fields.Remove(Fields.IndexOf(startField));
 
-            for (int i = 0; i < _mineCount; i++) {
+            for (var i = 0; i < _mineCount; i++) {
                 var mineField = fields[random.Next(fields.Count)];
                 _mines.Add(Fields[mineField]);
                 fields.Remove(mineField);
@@ -219,10 +220,5 @@ namespace Minesweeper.Model {
         }
 
         #endregion
-
-        public enum GameOverResult {
-            Lost,
-            Won
-        }
     }
 }

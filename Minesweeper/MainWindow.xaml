@@ -75,16 +75,14 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="model:Field">
-                        <Button Width="32" Height="32" Padding="0" BorderThickness="0"
-                                Command="{Binding Main.RevealCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                CommandParameter="{Binding}">
+                        <Button Width="32" Height="32" Padding="0" BorderThickness="0">
                             <Grid>
                                 <Image SnapsToDevicePixels="True">
                                     <Image.Style>
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="Icons/field.png" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=State}"
+                                                <DataTrigger Binding="{Binding State}"
                                                              Value="{x:Static model:Field+States.Blank}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
@@ -191,12 +189,8 @@
                                 </Label>
                             </Grid>
                             <Button.InputBindings>
-                                <MouseBinding Gesture="RightClick"
-                                              Command="{Binding Main.PlaceFlagCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                              CommandParameter="{Binding}" />
-                                <MouseBinding Gesture="MiddleClick"
-                                              Command="{Binding Main.MultiRevealCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                                              CommandParameter="{Binding}" />
+                                <MouseBinding Gesture="RightClick" Command="{Binding Main.RightClickCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                <MouseBinding Gesture="LeftClick" Command="{Binding Main.LeftClickCommand, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
                             </Button.InputBindings>
                         </Button>
                     </DataTemplate>

@@ -18,30 +18,30 @@ namespace Minesweeper.Model {
             }
         }
 
-        public void Set(int x, int y) {
+        public void Set(int x, int y, States state) {
             X = x;
             Y = y;
-            State = States.Default;
+            State = state;
         }
 
         [Flags]
         public enum States {
-            Blank     = 1 << 0,
-            One       = 1 << 1, 
-            Two       = 1 << 2,
-            Three     = 1 << 3, 
-            Four      = 1 << 4, 
-            Five      = 1 << 5,  
-            Six       = 1 << 6,
-            Seven     = 1 << 7,
-            Eight     = 1 << 8,
-            Default   = 1 << 9,
-            Flag      = 1 << 10,
+            Blank = 1 << 0,
+            One = 1 << 1, 
+            Two = 1 << 2,
+            Three = 1 << 3, 
+            Four = 1 << 4, 
+            Five = 1 << 5,  
+            Six = 1 << 6,
+            Seven = 1 << 7,
+            Eight = 1 << 8,
+            Unopened = 1 << 9,
+            FlagMark = 1 << 10,
             WrongFlag = 1 << 11,
-            Unknown   = 1 << 12,
-            Mine      = 1 << 13,
+            QuestionMark= 1 << 12,
+            Mine = 1 << 13,
 
-            Cues = One | Two | Three | Four | Five | Six | Seven | Eight,
+            AllDigits = One | Two | Three | Four | Five | Six | Seven | Eight,
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -67,7 +67,7 @@
             </Grid>
             
 
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoardView, Mode=OneWay}">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoardView, Mode=OneWay}" IsHitTestVisible="{Binding IsGameBoardInteractable}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="{Binding CurrentDifficulty.Height, Mode=OneWay}" Columns="{Binding CurrentDifficulty.Width, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -125,11 +125,11 @@
                                                     <Setter Property="Source" Value="Icons/mine.png" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Flag}">
+                                                             Value="{x:Static model:Field+States.FlagMark}">
                                                     <Setter Property="Source" Value="Icons/flag.png" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Unknown}">
+                                                             Value="{x:Static model:Field+States.QuestionMark}">
                                                     <Setter Property="Source" Value="Icons/unknown.png" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding State}"

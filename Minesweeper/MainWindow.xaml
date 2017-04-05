@@ -6,7 +6,6 @@
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:model="clr-namespace:Minesweeper.Model"
         mc:Ignorable="d ignore"
-        
         Title="Minesweeper"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
@@ -66,7 +65,6 @@
                 </StackPanel>
             </Grid>
             
-
             <ItemsControl Grid.Row="1" ItemsSource="{Binding GameBoardView, Mode=OneWay}" IsHitTestVisible="{Binding IsGameBoardInteractable}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -82,104 +80,82 @@
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="Icons/field.png" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Blank}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Blank}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.One}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.One}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Two}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Two}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Three}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Three}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Four}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Four}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Five}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Five}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Six}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Six}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Seven}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Seven}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Eight}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Eight}">
                                                     <Setter Property="Source" Value="Icons/empty.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Mine}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Mine}">
                                                     <Setter Property="Source" Value="Icons/mine.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.FlagMark}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.FlagMark}">
                                                     <Setter Property="Source" Value="Icons/flag.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.QuestionMark}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.QuestionMark}">
                                                     <Setter Property="Source" Value="Icons/unknown.png" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.WrongFlag}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.WrongFlag}">
                                                     <Setter Property="Source" Value="Icons/wrong_flag.png" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Image.Style>
                                 </Image>
-                                <Label Padding="2,0,0,0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold"
-                                       VerticalContentAlignment="Center">
+                                <Label Padding="2,0,0,0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" VerticalContentAlignment="Center">
                                     <Label.Style>
                                         <Style TargetType="Label">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.One}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.One}">
                                                     <Setter Property="Content" Value="1" />
                                                     <Setter Property="Foreground" Value="Blue" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Two}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Two}">
                                                     <Setter Property="Content" Value="2" />
                                                     <Setter Property="Foreground" Value="Green" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Three}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Three}">
                                                     <Setter Property="Content" Value="3" />
                                                     <Setter Property="Foreground" Value="Red" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Four}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Four}">
                                                     <Setter Property="Content" Value="4" />
                                                     <Setter Property="Foreground" Value="DarkBlue" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Five}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Five}">
                                                     <Setter Property="Content" Value="5" />
                                                     <Setter Property="Foreground" Value="Brown" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Six}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Six}">
                                                     <Setter Property="Content" Value="6" />
                                                     <Setter Property="Foreground" Value="Cyan" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Seven}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Seven}">
                                                     <Setter Property="Content" Value="7" />
                                                     <Setter Property="Foreground" Value="Black" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding State}"
-                                                             Value="{x:Static model:Field+States.Eight}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static model:Field+States.Eight}">
                                                     <Setter Property="Content" Value="8" />
                                                     <Setter Property="Foreground" Value="Gray" />
                                                 </DataTrigger>

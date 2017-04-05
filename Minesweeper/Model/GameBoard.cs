@@ -59,7 +59,7 @@ namespace Minesweeper.Model {
         public void InteractField(Field field) {
             if (field.State == Field.States.Unopened) {
                 InteractFieldUnopened(field);
-            } else if (!Field.States.AllDigits.HasFlag(field.State)) {
+            } else if (Field.States.AllDigits.HasFlag(field.State)) {
                 InteractFieldDigit(field);
             }
 

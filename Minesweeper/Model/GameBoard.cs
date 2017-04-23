@@ -91,6 +91,7 @@ namespace Minesweeper.Model {
                 PlaceMines(field);
                 GameStart?.Invoke();
             }
+
             OpenField(field);
         }
 
@@ -177,9 +178,7 @@ namespace Minesweeper.Model {
             GameOver?.Invoke(GameOverResult.Lost);
         }
 
-        private List<Field> GetNeighbours(Field field) {
-            var neightoubrs = new List<Field>();
-
+        private IEnumerable<Field> GetNeighbours(Field field) {
             for (var i = -1; i < 2; i++) {
                 for (var j = -1; j < 2; j++) {
                     if ((i == 0) && (j == 0)) {
@@ -194,10 +193,9 @@ namespace Minesweeper.Model {
                         continue;
                     }
 
-                    neightoubrs.Add(Fields[field.X + i + (field.Y + j)*Width]);
+                    yield return Fields[field.X + i + (field.Y + j)*Width];
                 }
             }
-            return neightoubrs;
         }
 
         private void PlaceMines(Field startField) {
